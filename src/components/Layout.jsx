@@ -47,24 +47,6 @@ function Layout(props) {
         {isReadyForInstall && (
           <button onClick={downloadApp}> Install App </button>
         )}
-        {/* <Button 
-          variant="outlined"
-          href="/login"
-        >
-            Iniciar sesión
-        </Button>
-        <Button 
-          variant="outlined"
-          href="/register"
-        >
-            Registrarse
-        </Button> */}
-
-
-        {/* <button > Iniciar sesión </button>
-        <button > Registrarse </button> */}
-
-
       </header>
       
       <nav>
@@ -72,21 +54,12 @@ function Layout(props) {
           <li>
             <Link to="/home">Inicio</Link>
           </li>
-          {/* <li>
-            <Link to="/admin">InicioAdmin</Link>
-          </li> */}
           <li>
             <Link to="/acerca">Sobre nosotros</Link>
           </li>
           <li>
             <Link to="/usuarios">Galeria</Link>
           </li>
-          {/* <li>
-            <Link to="/login">Login</Link>
-          </li>          
-          <li>
-            <Link to="/usersDashboard">Usuarios</Link>
-          </li> */}
         </ul>
       </nav>
       

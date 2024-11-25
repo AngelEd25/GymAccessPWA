@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link, Outlet } from "react-router-dom";
+
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 
 import  Home  from './../components/Home';
@@ -29,12 +31,17 @@ export const Routing = () => {
                   <Route path='usuarios' element={<Users />} />
                   <Route path='usersDashboard' element={<UserDashboard />} />
                </Route>
-               <Route path='/admin' element={<AdminLayout />}>
+               <Route path='/other' element={<AdminLayout />}>
                   <Route index element={<AdminHome />} />
     
                </Route>
                <Route path='/admin' element={<AdminLayout />}>
-                  <Route index element={<AdminHome />} />
+                  <Route path='home' element={<About />} />
+                  <Route path='usuarios' element={<About />} />
+                  <Route path='subscripciones' element={<About />} />
+                  <Route path='registros' element={<About />} />
+
+
                </Route>
             </Routes>
          {/* </AuthProvider> */}

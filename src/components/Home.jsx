@@ -52,7 +52,7 @@ const Home = () => {
          </section>
 
          <section className="home-cta">
-         <button onClick={() => setIsModalOpen(true)}>Contactanos</button>
+         {/* <button onClick={() => setIsModalOpen(true)}>Contactanos</button> */}
          <AuthModal isOpen={isModalOpen} register={isRegisterOpen} onClose={() => setIsModalOpen(false)}/>
          </section>
 
