@@ -1,0 +1,138 @@
+/* Fondo del modal */
+.modal-overlay {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100vw;
+   height: 100vh;
+   background-color: rgba(0, 0, 0, 0.5);
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   z-index: 1000;
+ }
+ 
+ /* Contenedor del modal */
+ .modal-container {
+   background-color: #fff;
+   padding: 1.5rem;
+   border-radius: 10px;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+   width: 90%;
+   max-width: 400px;
+   position: relative;
+   animation: slideIn 0.3s ease; /* Animación de entrada */
+ }
+ 
+ /* Animación de entrada */
+ @keyframes slideIn {
+   from {
+     transform: translateY(-30px);
+     opacity: 0;
+   }
+   to {
+     transform: translateY(0);
+     opacity: 1;
+   }
+ }
+ 
+ /* Botón de cierre */
+ .close-button {
+   position: absolute;
+   top: 10px;
+   right: 10px;
+   background: none;
+   border: none;
+   font-size: 1.5rem;
+   cursor: pointer;
+   color: #333;
+ }
+ 
+ /* Contenido del modal */
+ .modal-content h2 {
+   margin-bottom: 1rem;
+   color: #2b2b52;
+   font-size: 1.5rem;
+ }
+ 
+ .form-group {
+   margin-bottom: 1.2rem;
+   text-align: left;
+ }
+ 
+ .form-group label {
+   font-size: 1rem;
+   color: #6b6b83;
+ }
+ 
+ .form-group input {
+   width: 100%;
+   padding: 0.7rem;
+   margin-top: 0.4rem;
+   border: 1px solid #ddd;
+   border-radius: 5px;
+   font-size: 1rem;
+   outline: none;
+ }
+ 
+ .auth-button {
+   width: 100%;
+   padding: 0.8rem;
+   background-color: #4CAF50;
+   color: white;
+   border: none;
+   border-radius: 5px;
+   font-size: 1rem;
+   cursor: pointer;
+   transition: background-color 0.3s;
+ }
+ 
+ .auth-button:hover {
+   background-color: #45a049;
+ }
+ 
+ /* Estilos para alternar formulario */
+ .toggle-form {
+   margin-top: 1rem;
+   font-size: 0.9rem;
+ }
+ 
+ .toggle-form span {
+   color: #4CAF50;
+   cursor: pointer;
+   font-weight: bold;
+ }
+ 
+ .toggle-form span:hover {
+   text-decoration: underline;
+ }
+ 
+ /* Estilos para pantallas pequeñas (móvil) */
+ @media (max-width: 480px) {
+   .modal-container {
+     width: 95%;
+     padding: 1rem;
+   }
+ 
+   .modal-content h2 {
+     font-size: 1.4rem;
+   }
+ 
+   .form-group label {
+     font-size: 0.9rem;
+   }
+ 
+   .form-group input {
+     font-size: 0.9rem;
+   }
+ 
+   .auth-button {
+     padding: 0.7rem;
+     font-size: 0.95rem;
+   }
+ 
+   .close-button {
+     font-size: 1.3rem;
+   }
+ }
+ 

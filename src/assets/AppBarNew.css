@@ -1,0 +1,15 @@
+.custom-appbar {
+   position: fixed;
+   display: flex;
+   justify-content: space-between; /* Asegura que el contenido se distribuya entre izquierda y derecha */
+   align-items: center; /* Alinea los elementos verticalmente */
+   height: 64px; /* Ajusta la altura según sea necesario */
+   width: 100%; /* Ocupa todo el ancho */
+   top: 0;
+   left: 0;
+   background-color: #071b2e; /* Color de fondo personalizado */
+   z-index: 1201; /* Asegura que se mantenga por encima de otros elementos */
+   padding: 0 16px; /* Agrega padding para espacio horizontal */
+   box-sizing: border-box;
+ }
+ 

@@ -1,0 +1,62 @@
+/* src/styles/Register.css */
+.register-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-image: url('../assets/images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+  }
+
+  .logo {
+    
+    font-size: 2rem;
+    color: #ff6600;
+    margin-bottom: 20px;
+  }
+  
+  .register-form {
+    background: rgba(0, 0, 0, 0.8);
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    border-radius: 30px;
+    color: #fff;
+  }
+  
+  #card-form-register{
+    margin: auto;
+    width: 35%;
+
+    border-radius: 10px;
+    text-align: left;
+  }
+  .register-form h2 {
+    margin-bottom: 1.5rem;
+  }
+
+  .register-form input {
+    width: 100%;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  .register-form button {
+    width: 100%;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    background-color: #ff6600;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .register-form button:hover {
+    background-color: #cc5200;
+  }
+  

@@ -1,0 +1,83 @@
+/* Estilos básicos */
+.about-container {
+   font-family: Arial, sans-serif;
+   text-align: center;
+   padding: 2rem;
+   background-color: #ececec;
+ }
+ 
+ .about-header {
+   margin-bottom: 2rem;
+ }
+ 
+ .about-header h1 {
+   font-size: 2.5rem;
+   color: #3a3a3a;
+
+ }
+ 
+ .about-header p {
+   font-size: 1.5rem;
+   color: #ffffff;
+ }
+ 
+ .cta-button {
+   margin-top: 1rem;
+   padding: 1rem 2rem;
+   font-size: 1rem;
+   background-color: #4CAF50;
+   color: white;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+ }
+ 
+ .cta-button:hover {
+   background-color: #45a049;
+ }
+ 
+ /* Sección de características */
+ .features {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 1rem;
+   justify-content: center;
+   margin-bottom: 2rem;
+ }
+ 
+ .feature-card {
+   background-color: #fff;
+   padding: 1.5rem;
+   border-radius: 10px;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+   width: 100%;
+   max-width: 300px;
+ }
+ 
+ .feature-card h2 {
+   color: #2b2b52;
+   margin-bottom: 1rem;
+ }
+ 
+ .feature-card p {
+   color: #6b6b83;
+   font-size: 1rem;
+ }
+ 
+ /* Footer */
+ .about-footer {
+   color: #747474;
+   margin-top: 2rem;
+ }
+ 
+ /* Estilos Responsivos */
+ @media (min-width: 768px) {
+   .about-header h1 {
+      color: #000000;
+     font-size: 3rem;
+   }
+   .features {
+     flex-wrap: nowrap;
+   }
+ }
+ 

@@ -1,0 +1,97 @@
+/* Estilos generales para el Dashboard */
+.dashboard-container {
+   padding: 2rem;
+   background-color: #f4f4f9;
+ }
+ 
+ h1 {
+   color: #2b2b52;
+   margin-bottom: 1.5rem;
+   text-align: center;
+ }
+ 
+ .user-table {
+   width: 100%;
+   border-collapse: collapse;
+   margin-bottom: 2rem;
+ }
+ 
+ .user-table th, .user-table td {
+   padding: 1rem;
+   border: 1px solid #ddd;
+   text-align: left;
+ }
+ 
+ .user-table th {
+   background-color: #4caf50;
+   color: white;
+ }
+ 
+ .user-table td {
+   background-color: #fff;
+ }
+ 
+ .edit-button {
+   background-color: #ff9800;
+   color: white;
+   border: none;
+   padding: 0.5rem 1rem;
+   border-radius: 5px;
+   margin-right: 0.5rem;
+   cursor: pointer;
+ }
+ 
+ .delete-button {
+   background-color: #f44336;
+   color: white;
+   border: none;
+   padding: 0.5rem 1rem;
+   border-radius: 5px;
+   cursor: pointer;
+ }
+ 
+ .add-user-form {
+   background-color: #fff;
+   padding: 2rem;
+   border-radius: 10px;
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+   width: 400px;
+   margin: 0 auto;
+ }
+ 
+ .add-user-form h2 {
+   color: #2b2b52;
+   margin-bottom: 1.5rem;
+   text-align: center;
+ }
+ 
+ .form-group {
+   margin-bottom: 1.5rem;
+   text-align: left;
+ }
+ 
+ .form-group label {
+   font-size: 1rem;
+   color: #6b6b83;
+ }
+ 
+ .form-group input, .form-group select {
+   width: 100%;
+   padding: 0.8rem;
+   margin-top: 0.5rem;
+   border: 1px solid #ddd;
+   border-radius: 5px;
+   font-size: 1rem;
+ }
+ 
+ .add-button {
+   width: 100%;
+   padding: 0.8rem;
+   background-color: #4caf50;
+   color: white;
+   border: none;
+   border-radius: 5px;
+   font-size: 1rem;
+   cursor: pointer;
+ }
+ 
