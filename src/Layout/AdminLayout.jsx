@@ -60,9 +60,9 @@ export default function PermanentDrawerLeft(props) {
         <List>
             <ListItem key={"Usuarios"} disablePadding>
               <ListItemButton>
-                {/* <ListItemIcon>
+                <ListItemIcon>
                   <AccountCircleIcon />
-                </ListItemIcon> */}
+                </ListItemIcon>
                 <ListItemText primary={"Usuarios"}/>
               </ListItemButton>
             </ListItem>
@@ -71,9 +71,9 @@ export default function PermanentDrawerLeft(props) {
         <List>
             <ListItem key={"Subscripciones"} disablePadding>
               <ListItemButton>
-                {/* <ListItemIcon>
+                <ListItemIcon>
                   <LabelIcon /> 
-                </ListItemIcon> */}
+                </ListItemIcon>
                 <ListItemText  primary={"Subscripciones"}/>
               </ListItemButton>
             </ListItem>
@@ -82,9 +82,9 @@ export default function PermanentDrawerLeft(props) {
         <List>
             <ListItem key={"Registros"} disablePadding>
               <ListItemButton>
-                {/* <ListItemIcon>
+                <ListItemIcon>
                   <HistoryIcon /> 
-                </ListItemIcon> */}
+                </ListItemIcon>
                 <ListItemText  primary={"Registros"}/>
               </ListItemButton>
             </ListItem>
@@ -94,9 +94,9 @@ export default function PermanentDrawerLeft(props) {
             <ListItem key={"Cerrar Sesion"} disablePadding>
               <ListItemButton >
               
-                {/* <ListItemIcon>
+                <ListItemIcon>
                   <Avatar /> 
-                </ListItemIcon> */}
+                </ListItemIcon>
                 <Link type="button" to="/home">Cerrar sesion</Link>
               </ListItemButton>
             </ListItem>
