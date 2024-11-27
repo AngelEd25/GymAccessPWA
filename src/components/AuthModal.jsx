@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './../assets/AuthModal.css';
+import './../assets/authModal.css';
 
 const AuthModal = ({ isOpen, onClose}) => {
 
