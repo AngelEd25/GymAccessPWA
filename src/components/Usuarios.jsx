@@ -1,5 +1,5 @@
 import React, { useState }from 'react'
-import './../assets/about.css';
+import './../assets/About.css';
 import AuthModal from './../components/AuthModal';
 import FullWidthGrid from './FullWidthGrid';
 import { styled } from '@mui/material/styles';
