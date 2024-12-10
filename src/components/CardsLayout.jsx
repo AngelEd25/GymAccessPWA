@@ -7,7 +7,7 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import DataTable from './UserDataTable';
+import DataTable from './CardsDataTable';
 import Brightness3Icon from '@mui/icons-material/Brightness3';
 import Button from '@mui/material/Button';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
@@ -42,11 +42,12 @@ const FirstItem = styled(Paper)(({ theme }) => ({
   }),
 }));
 
-export default function UserDashboard() {
+export default function CardsLayout() {
   const navigate = useNavigate();
   const handleNavigation = (path) => {
     navigate(path);
   };
+
 
    return (
     <div className="about-container">

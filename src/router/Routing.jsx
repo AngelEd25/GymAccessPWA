@@ -10,8 +10,17 @@ import Layout from "./../components/Layout";
 import Users from '../components/Usuarios';
 
 import UserDashboard from '../components/UserDashboard';
+import RegistrosLayout from '../components/RegistrosLayout';
+import CardsLayout from '../components/CardsLayout';
+import SubscripcionLayout from '../components/SubscripcionLayout';
+
+
+
 import AdminHome from '../components/HomeRes';
+
 import AdminLayout from '../Layout/AdminLayout';
+import AdminLayoutMovil from '../Layout/AdminLayoutMovil';
+
 import Register from '../components/Register';
 
 export const Routing = () => {
@@ -20,29 +29,27 @@ export const Routing = () => {
       <BrowserRouter>
          {/* <AuthProvider> */}
             <Routes>
-               <Route path='/admin' element={<Layout />}>
+               <Route path='/admin' element={<AdminLayout />}>
                <Route path='login' element={<Login />} />
                <Route path='register' element={<Register />} />           
                </Route>
-               <Route path='/' element={<Layout />}>
+               <Route path='/gyma' element={<AdminLayout />}>
                   <Route path='home' element={<Home />} />
-                  <Route path='acerca' element={<About />} />
-                  
-                  <Route path='usuarios' element={<Users />} />
-                  <Route path='usersDashboard' element={<UserDashboard />} />
+                  <Route path='about' element={<About />} />
                </Route>
-               <Route path='/other' element={<AdminLayout />}>
-                  <Route index element={<AdminHome />} />
-    
+¡
+               <Route path='/admin-2' element={<AdminLayoutMovil />}>
+                  <Route path='home' element={<UserDashboard />} />
+                  <Route path='dashboard' element={<UserDashboard  />} />
+                  <Route path='usuarios' element={<UserDashboard />} />
+                  <Route path='subscripciones' element={<SubscripcionLayout />} />
+                  <Route path='registros' element={<RegistrosLayout />} />
+                  <Route path='tarjetas' element={<CardsLayout />} />
+
                </Route>
-               <Route path='/admin' element={<AdminLayout />}>
+               {/* <Route path='/admin-movil' element={<AdminLayoutPrime />}>
                   <Route path='home' element={<About />} />
-                  <Route path='usuarios' element={<About />} />
-                  <Route path='subscripciones' element={<About />} />
-                  <Route path='registros' element={<About />} />
-
-
-               </Route>
+               </Route> */}
             </Routes>
          {/* </AuthProvider> */}
       </BrowserRouter>

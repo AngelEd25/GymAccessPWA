@@ -7,7 +7,7 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import DataTable from './UserDataTable';
+import DataTable from './RegistrosDataTable';
 import Brightness3Icon from '@mui/icons-material/Brightness3';
 import Button from '@mui/material/Button';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
@@ -29,6 +29,29 @@ const Item = styled(Paper)(({ theme }) => ({
   }),
 }));
 
+const ItemCards = styled(Paper)(({ theme }) => ({
+  backgroundColor: '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+  ...theme.applyStyles('dark', {
+    backgroundColor: '#1A2027',
+  }),
+}));
+
+const HiddenItemCards = styled(Paper)(({ theme }) => ({
+  backgroundColor: '#fff',
+  opacity: 0,
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+  ...theme.applyStyles('dark', {
+    backgroundColor: '#1A2027',
+  }),
+}));
+
 const FirstItem = styled(Paper)(({ theme }) => ({
   backgroundColor: '#ececec',
   ...theme.typography.body2,
@@ -42,7 +65,7 @@ const FirstItem = styled(Paper)(({ theme }) => ({
   }),
 }));
 
-export default function UserDashboard() {
+export default function RegistrosLayout() {
   const navigate = useNavigate();
   const handleNavigation = (path) => {
     navigate(path);
@@ -120,7 +143,7 @@ export default function UserDashboard() {
               Incline el dispositivo para visualizar las tablas
             </Item>
             <Item elevation={0}> 
-              <DataTable name={name}/>
+              <DataTable/>
             </Item>
           </Grid>
           <Grid item xs={12}>

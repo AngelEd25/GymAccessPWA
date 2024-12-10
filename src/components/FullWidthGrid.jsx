@@ -18,9 +18,21 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function FullWidthGrid() {
   return (
     <Box sx={{ flexGrow: 1 }}>
+
       <Grid container spacing={2}>
+        
         <Grid item xs={12} md={4}>
-          <Item>
+          <Item
+            sx={{
+              padding: '5px',
+              backgroundColor: '#1A2027',
+              color: '#fff',
+              textAlign: 'center',
+              '&:hover': {
+                backgroundColor: '#3f51b5',
+              },
+            }}
+          >
             <div >
                <h2>Gestión de Suscripciones</h2>
                <p>Administra tus planes y pagos fácilmente desde cualquier dispositivo.</p>
@@ -28,7 +40,17 @@ export default function FullWidthGrid() {
           </Item>
         </Grid>
         <Grid item xs={12} md={4}>
-          <Item>
+          <Item
+            sx={{
+              padding: '5px',
+              backgroundColor: '#1A2027',
+              color: '#fff',
+              textAlign: 'center',
+              '&:hover': {
+                backgroundColor: '#3f51b5',
+              },
+            }}
+          >
             <div>
                <h2>Acceso Controlado</h2>
                <p>Accede a las instalaciones del gimnasio con tu tarjeta o código QR.</p>
@@ -38,14 +60,42 @@ export default function FullWidthGrid() {
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <Item>
-          <div >
+          <Item
+            sx={{
+              padding: '5px',
+              backgroundColor: '#1A2027',
+              color: '#fff',
+              textAlign: 'center',
+              '&:hover': {
+                backgroundColor: '#3f51b5',
+              },
+            }}
+          >
+            <div >
                <h2>Planes Personalizados</h2>
                <p>Consulta tus planes de entrenamiento diseñados por tu entrenador.</p>
             </div>
           </Item>
         </Grid>
 
+        <Grid item xs={12} md={12}>
+          <Item 
+            sx={{
+              padding: '0px',
+              backgroundColor: '#1A2027',
+              color: '#fff',
+              textAlign: 'center',
+              '&:hover': {
+                backgroundColor: '#3f51b5',
+              },
+            }}
+          >
+            <div >
+               <p>2024 GymAccess - Gestión Inteligente de Gimnasios.</p>
+            </div>
+          </Item>
+        </Grid>
+        
       </Grid>
     </Box>
   );

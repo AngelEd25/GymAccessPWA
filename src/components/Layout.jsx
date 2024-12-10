@@ -3,6 +3,7 @@ import { Link, Outlet } from "react-router-dom";
 import Button from "@mui/material/Button";
 
 import Sidebar from "./Sidebar.jsx"
+import AdminLayout from "../Layout/AdminLayout.jsx";
 
 function Layout(props) {
   const [isReadyForInstall, setIsReadyForInstall] = React.useState(false);
@@ -42,13 +43,6 @@ function Layout(props) {
   return (
     <div className="App">
       
-      <header>
-        <h1>Gym Access</h1>
-        {isReadyForInstall && (
-          <button onClick={downloadApp}> Install App </button>
-        )}
-      </header>
-      
       <nav>
         <ul>
           <li>
@@ -57,12 +51,17 @@ function Layout(props) {
           <li>
             <Link to="/acerca">Sobre nosotros</Link>
           </li>
+
           <li>
-            <Link to="/usuarios">Galeria</Link>
+            {isReadyForInstall && (
+            <button onClick={downloadApp}> Install App </button>
+            )}
           </li>
         </ul>
       </nav>
-      
+
+      <AdminLayout />
+
         <Outlet/>
       {props.children}
     </div>

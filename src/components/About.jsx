@@ -35,26 +35,39 @@ const FirstItem = styled(Paper)(({ theme }) => ({
 
 export default function About() {
    return (
-    
-    <div >
       <div className="about-container">
-         <header className="about-header">
-          <h1>¿Quienes somos?</h1>
-            {/* <p>Tu acceso inteligente al fitness.</p> */}
-         </header>
+        
          <section className="">
           <Box sx={{ flexGrow: 1 }}>
-            <Grid container spacing={0}>
-              <Grid item xs={12} md={12}>
+          <Grid container spacing={0}>
+            <Grid item xs={12} md={12} paddingBottom={3}>
+                <FirstItem elevation={0}>
+                    <div >
+                      <h3>
+                      </h3>
+                    </div>
+                </FirstItem>
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+              <Grid item xs={12} md={4}>
+                  <FirstItem elevation={0}>
+                    <div >
+                      <h3>
+                      </h3>
+                    </div>
+                  </FirstItem>
+                </Grid>
+              <Grid item xs={12} md={8}>
                 <FirstItem elevation={0}>
                   <div >
-                    <h3> En GymAccess, somos una empresa comprometida con la transformación digital de gimnasios y centros fitness. Nuestro propósito es proporcionar soluciones tecnológicas innovadoras que optimicen la gestión de membresías, accesos y servicios, permitiendo a nuestros clientes enfocarse en lo que más importa: mejorar la experiencia de sus usuarios.
+                    <h3> En GymAccess, somos desarrolladores independientes en asociacion a SportGym comprometidos en vision de la transformación digital de gimnasios y centros fitness. Nuestro propósito es proporcionar soluciones tecnológicas innovadoras que optimicen la gestión de membresías, accesos y servicios, permitiendo a nuestros clientes enfocarse en lo que más importa: mejorar la experiencia de sus usuarios.
                       Desde nuestra creación, hemos trabajado para desarrollar herramientas accesibles y eficientes que se adapten a las necesidades de gimnasios pequeños, medianos y grandes. Con una combinación de hardware avanzado y un sistema web intuitivo, ofrecemos una experiencia integrada que facilita el control y seguimiento de usuarios en tiempo real.
                     </h3>
                   </div>
                 </FirstItem>
               </Grid>
-            </Grid>
+          </Grid>
 
             <Grid container spacing={2}>
               <Grid item xs={12} md={12}>
@@ -68,11 +81,7 @@ export default function About() {
                 </Item>
 
               </Grid>
-              <Grid item xs={12} md={12}>
-                <FirstItem elevation={0}>
-                  <img src="https://picsum.photos/300/300" alt="imagen-prueba" />
-                </FirstItem>
-              </Grid>
+
               <Grid item xs={12} md={12}>
                 <Item>
                 <div >
@@ -116,22 +125,9 @@ export default function About() {
           </Box>            
          </section>
 
-
-
          <footer className="about-footer">
          <p>&copy; 2024 GymAccess - Gestión Inteligente de Gimnasios</p>
          </footer>
       </div>      
-    </div>
-
-    //  <>
-    //    <main>
-    //      <h2>¿Quienes somos?</h2>
-    //      <p> En GymAccess, somos una empresa comprometida con la transformación digital de gimnasios y centros fitness. Nuestro propósito es proporcionar soluciones tecnológicas innovadoras que optimicen la gestión de membresías, accesos y servicios, permitiendo a nuestros clientes enfocarse en lo que más importa: mejorar la experiencia de sus usuarios.
-
-    //         Desde nuestra creación, hemos trabajado para desarrollar herramientas accesibles y eficientes que se adapten a las necesidades de gimnasios pequeños, medianos y grandes. Con una combinación de hardware avanzado y un sistema web intuitivo, ofrecemos una experiencia integrada que facilita el control y seguimiento de usuarios en tiempo real.
-    //       </p>
-    //    </main>
-    //  </>
    );
 }

@@ -1,11 +1,5 @@
 /* Estilos básicos */
-.about-container {
-   font-family: Arial, sans-serif;
-   text-align: center;
-   padding: 2rem;
-   background-color: #ececec;
- }
- 
+
  .about-header {
    margin-bottom: 2rem;
  }
@@ -70,14 +64,47 @@
    margin-top: 2rem;
  }
  
- /* Estilos Responsivos */
- @media (min-width: 768px) {
-   .about-header h1 {
-      color: #000000;
-     font-size: 3rem;
-   }
-   .features {
-     flex-wrap: nowrap;
-   }
- }
- 
+/* Estilos generales */
+.about-container {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 4rem 0.5rem;
+  background-color: #ececec;
+  margin: 0 auto;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Estilos para pantallas pequeñas (dispositivos móviles) */
+@media (max-width: 480px) {
+  .about-container {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    width: 80%; /* Usa el 90% del ancho de la pantalla */
+    height: auto; /* Ajusta la altura según el contenido */
+    padding: 2rem 1rem; /* Reduce el padding para optimizar el espacio */
+    background-color: #f9f9f9; /* Cambia el color de fondo si es necesario */
+    font-size: 14px; /* Reduce el tamaño de fuente */
+  }
+}
+
+/* Estilos para tablets (pantallas medianas) */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .about-container {
+    width: 97%; /* Ajusta el ancho */
+    font-family: Arial, sans-serif;
+    text-align: center;
+    height: auto; /* Ajusta la altura según el contenido */
+    padding: 4rem 1rem; /* Ajusta el espacio interno */
+    font-size: 16px; /* Tamaño de fuente moderado */
+  }
+}
+
+/* Estilos para pantallas grandes (escritorios y laptops) */
+@media (min-width: 1025px) and (max-width: 1524px) {
+  .about-container {
+    width: 95%; /* Tamaño máximo para pantallas grandes */
+    padding: 4rem 1rem; /* Mantén espacio más amplio */
+    font-size: 18px; /* Texto más grande para mejor lectura */
+  }
+}
