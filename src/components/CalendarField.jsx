@@ -5,18 +5,21 @@ import './../assets/calendarField.css';
 
 import { TextField, Box } from "@mui/material";
 
-const CalendarField = ({ label, selectedDate, onDateChange }) => {
+const CalendarField = ({ label, selectedDate, onChange }) => {
+
+
+   console.log(selectedDate);
   return (
     <Box sx={{ my: 2 }}>
       <label>{label}</label>
       <DatePicker
-        selected={selectedDate}
-        onChange={(date) => onDateChange(date)}
+        select={selectedDate}
+        onChange={(date) => onChange(date)}
         customInput={
           <TextField
             variant="outlined"
             fullWidth
-            value={selectedDate ? selectedDate.toLocaleDateString() : ""}
+             value={selectedDate ? selectedDate : ""}
           />
         }
         dateFormat="dd/MM/yyyy"

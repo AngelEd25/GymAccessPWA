@@ -42,7 +42,7 @@ import Select from '@mui/material/Select';
 import AddIcon from '@mui/icons-material/Add';
 import { Calendar } from 'primereact/calendar';
 import { format, subHours } from 'date-fns';
-
+import CalendarField from "./CalendarField";
 const style = {
   position: 'absolute',
   top: '50%',
@@ -358,17 +358,6 @@ export default function SubscriptionsDataTable() {
                         </Box>                        
                       <Box sx={{ width: 500, maxWidth: "100%" }}>
 
-                        {/* <TextField
-                          fullWidth
-                          required
-                          id="name"
-                          margin="dense"
-                          label="Tipo"
-                          value={updatedTipo}
-                          onChange={(e) => setUpdatedTipo(e.target.value)}
-                          variant="filled"
-                          size="small"
-                        /> */}
                         <TextField
                           fullWidth
                           disabled
@@ -384,39 +373,41 @@ export default function SubscriptionsDataTable() {
                             <Calendar value={updatedFechaInicio} onChange={(e) => setUpdatedFechaInicio(e.target.value)} />
                         </div>
                         <Calendar value={updatedFechaInicio} onChange={(e) => setUpdatedFechaInicio(e.target.value)} /> */}
-                        <TextField
+                        {/* <TextField
                             fullWidth
                             required
                             id="standard-required"
                             margin="dense"
                             label="Inicio"
                             value={updatedFechaInicio}
-                            placeholder={updatedFechaInicio ? formatCreatedAt(selectedSubscription.startDate) : "N/A"}
+                            placeholder={formatCreatedAt(selectedSubscription.startDate)}
                             variant="filled"
                             size="small"
                             onChange={(e) => setUpdatedFechaInicio(e.target.value)} 
-                        /> 
+                        />  */}
                         <CalendarField
                           label="Fecha de Inicio"
-                          selectedDate={startDate}
-                          onDateChange={setStartDate}
+                          selectedDate={selectedSubscription.startDate}
+                          
+                          onChange={(date) => setUpdatedFechaInicio(date)} 
                         />
                         <CalendarField
                           label="Fecha de Fin"
-                          selectedDate={endDate}
-                          onDateChange={setEndDate}
+                          selectedDate={selectedSubscription.startDate}
+                          onChange={(date) => setUpdatedVencimiento(date)} 
+
                         />                  
-                        <TextField
+                        {/* <TextField
                           fullWidth
                           id="email"
                           margin="dense"
                           label="Vencimiento"
-                          value={updatedVencimiento ? formatCreatedAt(selectedSubscription.endDate) : "N/A"}
-                          placeholder={updatedVencimiento ? formatCreatedAt(selectedSubscription.endDate) : "N/A"}
+                          value={selectedSubscription ? formatCreatedAt(selectedSubscription.endDate) : "N/A"}
+                          placeholder={selectedSubscription ? formatCreatedAt(selectedSubscription.endDate) : "N/A"}
                           onChange={(e) => setUpdatedVencimiento(e.target.value)}
                           variant="filled"
                           size="small"
-                        />
+                        /> */}
                     </Box>
                         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                           <strong>Status:</strong> {selectedSubscription.status === "activo"?  "Activo" :"Inactivo" }
