@@ -40,18 +40,6 @@ const ItemCards = styled(Paper)(({ theme }) => ({
   }),
 }));
 
-const HiddenItemCards = styled(Paper)(({ theme }) => ({
-  backgroundColor: '#fff',
-  opacity: 0,
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  ...theme.applyStyles('dark', {
-    backgroundColor: '#1A2027',
-  }),
-}));
-
 const FirstItem = styled(Paper)(({ theme }) => ({
   backgroundColor: '#ececec',
   ...theme.typography.body2,

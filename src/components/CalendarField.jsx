@@ -7,19 +7,21 @@ import { TextField, Box } from "@mui/material";
 
 const CalendarField = ({ label, selectedDate, onChange }) => {
 
-
-   console.log(selectedDate);
   return (
     <Box sx={{ my: 2 }}>
       <label>{label}</label>
       <DatePicker
-        select={selectedDate}
-        onChange={(date) => onChange(date)}
+        selected={selectedDate} // Fecha seleccionada
+        onChange={(date) => onChange(date)} // Llamar a la función pasada como prop
         customInput={
           <TextField
             variant="outlined"
             fullWidth
-             value={selectedDate ? selectedDate : ""}
+            value={
+              selectedDate
+                ? selectedDate
+                : ""
+            } // Mostrar fecha formateada
           />
         }
         dateFormat="dd/MM/yyyy"
@@ -29,5 +31,6 @@ const CalendarField = ({ label, selectedDate, onChange }) => {
     </Box>
   );
 };
+
 
 export default CalendarField;

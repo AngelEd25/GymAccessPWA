@@ -9,8 +9,6 @@ import Paper from '@mui/material/Paper';
 import { UserService } from '../services/Usuario.service';
 import { CardService } from '../services/Cards.service';
 
-
-
 import MenuOptions from './MenuOptions';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -39,6 +37,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import AddIcon from '@mui/icons-material/Add';
+import SearchableSelect from "./SearchableSelct";
 
 const style = {
   position: 'absolute',
@@ -54,8 +53,17 @@ const style = {
 
 export default function CardsDataTable() {
   const [openModalEdit, setOpenModalEdit] = useState(false);
+  const [openModalCreate, setOpenModalCreate] = useState(false);
+  const [openAlertModal, setOpenAlertModal] = useState(false);
+
+  // Estados para las alertas
+  const [alertMessage, setAlertMessage] = React.useState("");
+  const [alertSeverity, setAlertSeverity] = React.useState(""); // success, warning, error
+
   const [openAlert, setOpenAlert] = useState(false);
   const [cardsData, setCardsData] = useState([]); // Estado para las tarjetas
+  const [usersData, setUsersData] = useState([]); // Estado para las tarjetas
+
   const [loading, setLoading] = useState(true); // Para mostrar un mensaje mientras carga
   const [selectedCard, setSelectedCard] = useState(null); // Estado para el usuario seleccionado
 
@@ -68,6 +76,26 @@ export default function CardsDataTable() {
     setOpenModalEdit(false); // Cierra el modal
     setSelectedCard(null); // Limpia la tarjeta seleccionada
   };
+
+  const handleOpenCreate = () => {
+    setOpenModalCreate(true)
+  };
+
+  const closeModalCreate = () => {
+    setOpenModalCreate(false)
+    setSelectedCard(null); // Limpia la tarjeta seleccionada
+    setUpdatedLote(null);
+    setUpdatedCard(null)
+    setUpdatedUser(null);
+    setSelectedOption(null)
+
+  };
+
+  const closeAlertModal = () => {
+    // setOpenModalEdit(false); // Abre el modal
+    setOpenAlertModal(false); // Cierra el modal Alert
+  };
+
 
   const handleSwitchStatus = async (cards) => {
     const id = cards._id;
@@ -92,6 +120,11 @@ export default function CardsDataTable() {
 
   // Estado para el valor actualizado del lote
   const [updatedLote, setUpdatedLote] = React.useState("");
+  const [updatedUser, setUpdatedUser] = React.useState("");
+  const [updatedCard, setUpdatedCard] = React.useState("");
+  const [updatedNewdCard, setUpdatedNewCard] = React.useState("");
+
+
 
   React.useEffect(() => {
     if (selectedCard) {
@@ -100,18 +133,16 @@ export default function CardsDataTable() {
   }, [selectedCard]);
 
   // Función para manejar la confirmación del formulario
-  const handleConfirm = async () => {
+  const handleConfirmEdit = async () => {
     if (!updatedLote) {
       alert("Por favor ingresa un UID válido.");
       return;
     }
-
     try {
       // Llamada al backend para actualizar la tarjeta
       const response = await CardService.putCard(selectedCard._id, {
         lote: updatedLote,
       });
-
       if (response) {
         // Actualiza la lista de tarjetas (cardsData)
         setCardsData((prev) =>
@@ -120,16 +151,72 @@ export default function CardsDataTable() {
           )
         );
         const cards = await CardService.getCards(); // Llamada al servicio
-        setCardsData(cards); // Guardar datos en el estado
-        alert(<Alert severity="success">This is a success Alert.</Alert>);
+        setAlertMessage("Tarjeta actualizada exitosamente.");
+        setAlertSeverity("success");
+        setOpenAlertModal(true);
         closeModalEdit(); // Cierra el modal
       }
     } catch (error) {
       console.error("Error al actualizar la tarjeta:", error);
-      alert("Error al actualizar la tarjeta.");
+      setAlertMessage("Algo salio mal al actualizar tarjeta.");
+      setAlertSeverity("warning");
+      setOpenAlertModal(true);
     }
   };
 
+  // Función para manejar la confirmación del formulario
+  const handleConfirmCreate = async () => {
+    console.log(updatedNewdCard);
+    console.log(updatedUser);
+      if (!updatedNewdCard || !updatedUser) {
+        setAlertMessage("Ingresa seleciona un usuario y asigna una tarjeta antes de enviar solicitud.");
+        setAlertSeverity("warning");
+        setOpenAlertModal(true);
+        closeModalEdit(); // Cierra el modal
+        return;
+      }
+
+    try {
+      // Llamada al backend para actualizar la tarjeta
+      const response = await CardService.postCard({
+        lote: updatedNewdCard,
+        userId: updatedUser
+      });
+      console.log(response)
+      if (response) {
+        const cards = await CardService.getCards(); // Llamada al servicio
+        setCardsData(cards); // Guardar datos en el estado
+        setAlertMessage("Tarjeta creada exitosamente.");
+        setAlertSeverity("success");
+        setOpenAlertModal(true);
+        closeModalEdit(); // Cierra el modal
+
+      }
+
+
+      
+    } catch (error) {
+      console.error("Error al crear la tarjeta:", error);
+      setAlertMessage("Algo salio mal al crear tarjeta.");
+      setAlertSeverity("warning");
+      setOpenAlertModal(true);
+    }
+  };
+
+  // STATES PARA SELECT DE USERS
+  const [selectedOption, setSelectedOption] = useState(null);
+  const handleSelect = (value) => {
+
+    setUpdatedUser(value._id)
+    if(value.card == undefined){
+      setUpdatedCard("Aún no cuenta con tarjeta");      
+    }
+    else{
+      setUpdatedCard(value.card.lote);      
+    }
+    setSelectedOption(value);
+
+  };
 
   // Obtener usuarios al cargar el componente
   useEffect(() => {
@@ -137,6 +224,8 @@ export default function CardsDataTable() {
       try {
         const cards = await CardService.getCards(); // Llamada al servicio
         setCardsData(cards); // Guardar datos en el estado
+        const users = await UserService.getUsers(); // Llamada al servicio
+        setUsersData(users); // Guardar datos en el estado
       } catch (error) {
         console.error("Error al obtener tarjetas:", error);
       } finally {
@@ -169,7 +258,7 @@ export default function CardsDataTable() {
               </Typography>
             </TableCell>
             <TableCell align="left">
-              <Button variant="contained" size="small" onClick={() => addCard()}>
+              <Button variant="contained" size="small" onClick={() => handleOpenCreate()}>
                 <AddIcon />
               </Button>              
             </TableCell>
@@ -209,7 +298,7 @@ export default function CardsDataTable() {
                 {cards.status == "activo" ? "Activo" : "Inactivo"} {/* Suponer un estado predeterminado */}
               </TableCell>
               <TableCell align="left">
-                <Button variant="contained" size="small" onClick={() => handleOpenEdit(cards )}>
+                <Button variant="contained" size="small" onClick={() => handleOpenEdit(cards)}>
                   <EditIcon />
                 </Button>
               </TableCell>
@@ -239,7 +328,7 @@ export default function CardsDataTable() {
             <Box sx={style}>
               {selectedCard && (
                   <>
-                  <Alert severity="success">This is a success Alert.</Alert>
+                  
                     <Card sx={{ width: {sm: '350', md: '450'} }}>
                       <CardHeader
 
@@ -272,16 +361,102 @@ export default function CardsDataTable() {
                         </Box>                        
                       </CardContent>
                         <CardActions>
-                        <Button size="small" onClick={handleConfirm}>Confirmar</Button>
+                        <Button size="small" onClick={handleConfirmEdit}>Confirmar</Button>
                         <Button size="small" onClick={closeModalEdit}>Cancelar</Button>
                         </CardActions>
                     </Card>
                   </>
                 )}
             </Box>
-
           </Modal>
 
+          <Modal
+            open={openModalCreate}
+            onClose={closeModalCreate}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+                    <Card sx={{ maxWidth: 345 }}>
+                      <CardHeader
+                        action={
+                          <IconButton aria-label="settings" onClick={closeModalCreate}>
+                            <ClearIcon />
+                          </IconButton>
+                        }
+                        title="Agregar Tarjeta"
+                      />
+
+                      <CardContent>
+                        <Box sx={{ width: 500, maxWidth: "100%" }}>
+                          <div>
+                            <SearchableSelect
+                              options={usersData}
+                              label="Buscar Usuario"
+                              onSelect={handleSelect}
+                            />
+                            {selectedOption && (
+                              <>
+                                <TextField
+                                fullWidth
+                                disabled
+                                id="user"
+                                margin="dense"
+                                label="Usuario"
+                                value={selectedOption.name + " " + selectedOption.lastName }
+                                
+                                variant="filled"
+                                size="small"
+                                />
+                                <TextField
+                                  fullWidth
+                                  id="card"
+                                  margin="dense"
+                                  label="Nueva Tarjeta"
+                                  
+                                  placeholder="UID Nueva Tarjeta"
+                                  onChange={(e) => setUpdatedNewCard(e.target.value)}
+                                  variant="filled"
+                                  size="small"
+                                />
+                                <TextField
+                                  fullWidth
+                                  disabled
+                                  id="card"
+                                  margin="dense"
+                                  label="Tarjetas"
+                                  value={updatedCard}
+                                  onChange={(e) => setUpdatedCard(e.target.value)}
+                                  variant="filled"
+                                  size="small"
+                                />                                                     
+                              </>
+
+                            )}
+                          </div>
+
+
+                        </Box>
+                      </CardContent>
+                      <CardActions>
+                        <Button size="small" onClick={() => handleConfirmCreate()}>
+                          Confirmar
+                        </Button>
+                        <Button size="small" onClick={closeModalCreate}>
+                          Cancelar
+                        </Button>
+                      </CardActions>
+                    </Card>
+            </Box>
+          </Modal>   
+
+          <Modal open={openAlertModal} onClose={closeAlertModal} aria-labelledby="alert-modal-title" aria-describedby="alert-modal-description">
+            <Box sx={{ ...style, textAlign: "center", p: 4 }}>
+              <Alert severity={alertSeverity} onClose={closeAlertModal}>
+                {alertMessage}
+              </Alert>
+            </Box>
+          </Modal>
 
         </TableBody>
       </Table>

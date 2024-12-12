@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate  } from "react-router-dom";
 import { styled, alpha, createTheme, ThemeProvider} from '@mui/material/styles';
 import Drawer from '@mui/material/Drawer';
@@ -23,6 +23,7 @@ import CardActionArea from '@mui/material/CardActionArea';
 import CardMedia from '@mui/material/CardMedia';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import Button from '@mui/material/Button';
 
 import LabelIcon from '@mui/icons-material/Label';
 import HistoryIcon from '@mui/icons-material/History';
@@ -51,8 +52,61 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 export default function AdminLayoutMovil(props) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
 
+  const [isReadyForInstall, setIsReadyForInstall] = React.useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsAuthenticated(true);
+    } else {
+      navigate("/admin/login");
+    }
+  }, [navigate]);
+
+
+  
+  useEffect(() => {
+    window.addEventListener("beforeinstallprompt", (event) => {
+      // Prevent the mini-infobar from appearing on mobile.
+      event.preventDefault();
+      console.log("👍", "beforeinstallprompt", event);
+      // Stash the event so it can be triggered later.
+      window.deferredPrompt = event;
+      // Remove the 'hidden' class from the install button container.
+      setIsReadyForInstall(true);
+    });
+  }, []);
+
+  const handleLogout = () => {
+    handleClose()
+    localStorage.removeItem("token"); // Elimina el token registrado
+    navigate("/admin/login");
+  }
+
+  async function downloadApp() {
+    console.log("👍", "butInstall-clicked");
+    const promptEvent = window.deferredPrompt;
+    if (!promptEvent) {
+      // The deferred prompt isn't available.
+      console.log("oops, no prompt event guardado en window");
+      return;
+    }
+    // Show the install prompt.
+    promptEvent.prompt();
+    // Log the result
+    const result = await promptEvent.userChoice;
+    console.log("👍", "userChoice", result);
+    // Reset the deferred prompt variable, since
+    // prompt() can only be called once.
+    window.deferredPrompt = null;
+    // Hide the install button.
+    setIsReadyForInstall(false);
+  }
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -63,7 +117,6 @@ export default function AdminLayoutMovil(props) {
 
   const drawerWidth = 215;
 
-  const navigate = useNavigate();
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -115,7 +168,7 @@ export default function AdminLayoutMovil(props) {
                     <CardMedia
                         component="img"
                         sx={{ width: 65, height: 65}}
-                        image="./../public/Android/icon144-gyma.png"
+                        image="https://cdn.gencraft.com/prod/user/e289b914-4708-4e31-91f4-34a7af492ae8/edfc8973-029c-4066-90d2-a5c964177435/image/image1_0.jpg?Expires=1734028413&Signature=UDEGvComOlLpB-djzMu17YK1A02QgsBI4M0~DYFOkWbV~U3pcZ4H1VAI2H7dyreTZrMUepu-YYzG0JEpfMmlmUaZ-zxOcRYeLVPYAzl0TDShpnoZzACIPLISwe-wf4LYaan79qka8nJwTJitRoD1NjapSH3VwAOZRbwmd-pccAkKaUpc-1nNm8Gk8HtPHHgBl9DFyWXbO8tOt6qKwJ~NT6Hiw9DwF~ShOsuDUUwL1l3MLeo0CB-5kiYiUT7mTcF9iZpgonzRJNv-4wZUpduF3FshNtqdvVB4xFGHWV-jRnIHaK10OvJoCcYMeJS1uTSKGwha1lEYwuIawVSOtIWYNg__&Key-Pair-Id=K3RDDB1TZ8BHT8"
                         alt="Gyma-icon"
                     />                 
                 </Item>
@@ -132,15 +185,18 @@ export default function AdminLayoutMovil(props) {
 
           <Box sx={{ display: { xs: 'flex', md: 'flex' } }}>
             <IconButton size="large" aria-label="show new subscription mails" color="inherit" onClick={() => clearNotifications("subscriptions")}>
-              <Badge badgeContent={notifications.subscriptions.length} color="error">
-                <MailIcon />
-              </Badge>
+            {isReadyForInstall && (
+            <button onClick={downloadApp}> Install App </button>
+            )}
             </IconButton>
+            <Button color="inherit" onClick={() => navigate('/gyma/home')}>Home</Button>
+
             <IconButton size="large" aria-label="show new notifications" color="inherit" onClick={() => clearNotifications("general")}>
               <Badge badgeContent={notifications.general.length} color="error">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
+
             <Tooltip title="Account settings">
                 <IconButton
                     onClick={handleClick}
@@ -190,26 +246,8 @@ export default function AdminLayoutMovil(props) {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-                <MenuItem onClick={handleClose}>
-                <Avatar /> Profile
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                <Avatar /> My account
-                </MenuItem>
                 <Divider />
-                <MenuItem onClick={handleClose}>
-                <ListItemIcon>
-                    <PersonAdd fontSize="small" />
-                </ListItemIcon>
-                Add another account
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                <ListItemIcon>
-                    <Settings fontSize="small" />
-                </ListItemIcon>
-                Settings
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
+                <MenuItem onClick={handleLogout}>
                 <ListItemIcon>
                     <Logout fontSize="small" />
                 </ListItemIcon>
@@ -277,7 +315,7 @@ export default function AdminLayoutMovil(props) {
         <Divider />
         <List>
           <ListItem key={"Cerrar Sesion"} disablePadding>
-              <ListItemButton onClick={() => handleNavigation('/gyma/home')}>
+              <ListItemButton onClick={() => handleNavigation('/admin/login')}>
                 <ListItemIcon>
                   <Logout fontSize="small" />
                 </ListItemIcon>

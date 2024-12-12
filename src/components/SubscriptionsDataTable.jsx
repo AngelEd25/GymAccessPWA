@@ -43,6 +43,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { Calendar } from 'primereact/calendar';
 import { format, subHours } from 'date-fns';
 import CalendarField from "./CalendarField";
+import SearchableSelect from "./SearchableSelct";
 const style = {
   position: 'absolute',
   top: '50%',
@@ -57,10 +58,13 @@ const style = {
 
 export default function SubscriptionsDataTable() {
   const [openModalEdit, setOpenModalEdit] = useState(false);
+  const [openModalCreate, setOpenModalCreate] = useState(false);
+
   const [openAlertModal, setOpenAlertModal] = useState(false);
 
   const [openAlert, setOpenAlert] = useState(false);
   const [subscriptionData, setSubscriptionsData] = useState([]); // Estado para los usuarios
+  const [userData, setUserData] = useState([]); // Estado para los usuarios
   const [cardsData, setCardsData] = useState([]); // Estado para los usuarios
   const [notifications, setNotifications] = useState([]); // Estado para las Notificaciones
 
@@ -71,16 +75,36 @@ export default function SubscriptionsDataTable() {
     setSelectedSubscription(sub); // Almacena el usuario seleccionado
     setOpenModalEdit(true); // Abre el modal
   };
+  const closeModalEdit = () => {
+    setOpenModalEdit(false); // Cierra el modal
+    setUpdatedTipo(null);
+    setUpdatedPrecio(null);
+    setUpdatedFechaInicio(null);
+    setUpdatedVencimiento(null);
+    setUpdatedCard(null);
+    setUpdatedUser(null);
+    setSelectedSubscription(null); // Limpia el card seleccionado
+  };
+  const handleOpenCreate = () => {
+    setOpenModalCreate(true); // Abre el modal
+  };
 
+  const closeModalCreate = () => {
+    setUpdatedTipo(null);
+    setUpdatedPrecio(null);
+    setUpdatedFechaInicio(null);
+    setUpdatedVencimiento(null);
+    setUpdatedCard(null);
+    setUpdatedUser(null);
+    setOpenModalCreate(false); // Limpia el card seleccionado
+  };
+  
   const closeAlertModal = () => {
     // setOpenModalEdit(false); // Abre el modal
     setOpenAlertModal(false); // Cierra el modal Alert
   };
   
-  const closeModalEdit = () => {
-    setOpenModalEdit(false); // Cierra el modal
-    setSelectedSubscription(null); // Limpia el card seleccionado
-  };
+ 
 
   const handleSwitchStatus = async (subs) => {
     const id = subs._id;
@@ -99,6 +123,7 @@ export default function SubscriptionsDataTable() {
     setSelectedSubscription(null); // Limpia el usuario seleccionado
   };
 
+  // Recargar la tabla de subscripciones
   const refreshTable =  async () =>{
     const sub = await SubscriptionService.getSubscriptions(); // Llamada al servicio
     setSubscriptionsData(sub); // Guardar datos en el estado
@@ -115,6 +140,37 @@ export default function SubscriptionsDataTable() {
   const [updatedPrecio, setUpdatedPrecio] = React.useState("");
   const [updatedFechaInicio, setUpdatedFechaInicio] = React.useState("");
   const [updatedVencimiento, setUpdatedVencimiento] = React.useState("");
+  const [updatedCard, setUpdatedCard] = React.useState("");
+  const [updatedUser, setUpdatedUser] = React.useState("");
+
+
+  const changePrecio = (tipo) => {
+    // Lógica para actualizar el precio según el tipo seleccionado
+    if (tipo === "Semanal") setUpdatedPrecio(100);
+    if (tipo === "Mensual") setUpdatedPrecio(400);
+    if (tipo === "Semestral") setUpdatedPrecio(2200);
+    if (tipo === "Anual") setUpdatedPrecio(4000);
+  };
+
+  const changeVencimiento = (tipo) => {
+    if (!updatedFechaInicio) {
+      console.error("Debe seleccionar una fecha de inicio antes de calcular la fecha de vencimiento.");
+      return;
+    }
+    const newDate = new Date(updatedFechaInicio); // Crear una nueva instancia para no mutar el estado original
+
+    if (tipo === "Semanal") {
+      newDate.setDate(newDate.getDate() + 7); // Sumar 7 días
+    } else if (tipo === "Mensual") {
+      newDate.setMonth(newDate.getMonth() + 1); // Sumar 1 mes
+    } else if (tipo === "Semestral") {
+      newDate.setMonth(newDate.getMonth() + 6); // Sumar 6 meses
+    } else if (tipo === "Anual") {
+      newDate.setFullYear(newDate.getFullYear() + 1); // Sumar 1 año
+    }
+  
+    setUpdatedVencimiento(newDate); // Actualizar la fecha de vencimiento
+  };
 
   // Estados para las alertas
   const [alertMessage, setAlertMessage] = React.useState("");
@@ -126,12 +182,14 @@ export default function SubscriptionsDataTable() {
       setUpdatedPrecio(selectedSubscription.price); // Inicializa el valor con el precio actual
       setUpdatedFechaInicio(selectedSubscription.startDate); // Inicializa el valor con la fecha de contrato actual
       setUpdatedVencimiento(selectedSubscription.endDate); // Inicializa el valor con la fecha de vencimiento actual
+      setUpdatedCard(selectedSubscription.card._id); // Inicializa el valor de tarjeta actual
+      setUpdatedUser(selectedSubscription.user._id); // Inicializa el valor del usuario actual
     }
   }, [selectedSubscription]);
 
   // Función para manejar la confirmación del formulario
-  const handleConfirm = async () => {
-      if (!updatedTipo || !updatedPrecio || !updatedFechaInicio || !updatedVencimiento) {
+  const handleConfirmEdit = async () => {
+      if (!updatedTipo || !updatedPrecio || !updatedFechaInicio || !updatedVencimiento || !updatedCard || !updatedUser) {
         setAlertMessage("Por favor, complete todos los campos requeridos.");
         setAlertSeverity("warning");
         setOpenAlertModal(true);
@@ -139,65 +197,78 @@ export default function SubscriptionsDataTable() {
       }
       try{
           // Llamada al backend para actualizar la tarjeta
-          // const responseFindCard = await CardService.getCardById(selectedSubscription.card._id);
-          // console.log(responseFindCard);
-           console.log(updatedTipo);
-           console.log(updatedPrecio);
-           console.log(updatedFechaInicio);
-           console.log(updatedVencimiento);
-
-
-          
-            
-            // Llamada al backend para actualizar el usuario
-            // const responseUpdateSubscription = await SubscriptionService.putSubscription(selectedSubscription._id, {
-            //   name: updatedName,
-            //   lastName: updatedLastName,
-            //   email: updatedEmail,
-            //   card: selectedSubscription.card._id
-            // });
-            // // Llamada al backend para actualizar la tarjeta
-            // const responseUpdateCard = await CardService.putCard(selectedSubscription.card._id, {
-            //   lote: updatedLote,
-            // });
-            //   // Actualiza la lista de usuarios (subsData)
-            //   const sub = await SubscriptionService.getSubscriptions(); // Llamada al servicio
-            //   setSubscriptionsData(sub); // Guardar datos en el estado
-            //   const cards = await CardService.getCards(); // Llamada al servicio
-            //   setCardsData(cards); // Guardar datos en el estado
-            //   setAlertMessage("Usuario actualizado exitosamente.");
-            //   setAlertSeverity("success");
-            //   setOpenAlertModal(true);
-            //   closeModalEdit(); // Cierra el modal              
-          
-
+          const responseFindCard = await CardService.getCardById(selectedSubscription.card._id);
+          console.log(responseFindCard);
+            // Llamada al backend para actualizar la subscripcion
+            const responseUpdateSubscription = await SubscriptionService.putSubscription(selectedSubscription._id, {
+              type: updatedTipo,
+              price: updatedPrecio,
+              startDate: updatedFechaInicio,
+              endDate: updatedVencimiento,
+              card: updatedCard,
+              userId: updatedUser
+            });
+              // Actualiza la lista de subscripciones (subsData)
+              const sub = await SubscriptionService.getSubscriptions(); // Llamada al servicio
+              setSubscriptionsData(sub); // Guardar datos en el estado
+              setAlertMessage("Subscripcion actualizada exitosamente.");
+              setAlertSeverity("success");
+              setOpenAlertModal(true);
+              closeModalEdit(); // Cierra el modal              
       }catch (error) {
         console.error("Error al actualizar usuario:", error);
-        alert("Error al actualizar Usuario.");
+        setAlertMessage("Algo salio mal al actualizar Subscripcion.");
+        setAlertSeverity("warning");
+        setOpenAlertModal(true);
       }
   };
 
-  const [tipo, setTipo] = React.useState('');
+  
+  const handleConfirmCreate = async () => {
 
-  const changePrecio = (event) => {
-    console.log(event);
-    switch (event) {
-      case 'Semanal':
-      setUpdatedPrecio(79);
-      break;
-      case 'Mensual':
-      setUpdatedPrecio(289);
-      break;
-      case 'Semestral':
-      setUpdatedPrecio(1559);  
-      break;
-      case 'Anual':
-      setUpdatedPrecio(2799);  
-      break;
-      default:
-        break;
+    // console.log(updatedTipo);
+    // console.log(updatedPrecio);
+    // console.log(updatedFechaInicio);
+    // console.log(updatedVencimiento);
+    console.log("Tarjeta: " + updatedCard);
+    // console.log("Usuario: " + updatedUser);
+    try{
+        if (!updatedTipo || !updatedPrecio || !updatedFechaInicio || !updatedVencimiento || !updatedCard || !updatedUser) {
+          setAlertMessage("Por favor, complete todos los campos requeridos.");
+          setAlertSeverity("warning");
+          setOpenAlertModal(true);
+          return;
+        }      
+          // Llamada al backend para actualizar la subscripcion
+          const responseUpdateSubscription = await SubscriptionService.postSubscription({
+            type: updatedTipo,
+            price: updatedPrecio,
+            startDate: updatedFechaInicio,
+            endDate: updatedVencimiento,
+            card: updatedCard,
+            userId: updatedUser
+          });
+            // Actualiza la lista de subscripciones (subsData)
+            const sub = await SubscriptionService.getSubscriptions(); // Llamada al servicio
+            setSubscriptionsData(sub); // Guardar datos en el estado
+            setAlertMessage("Subscripcion actualizada exitosamente.");
+            setAlertSeverity("success");
+            setOpenAlertModal(true);
+            closeModalEdit(); // Cierra el modal              
+    }catch (error) {
+      console.error("Error al actualizar usuario:", error);
+      setAlertMessage("Algo salio mal al Crear Subscripcion");
+      setAlertSeverity("warning");
+      setOpenAlertModal(true);
     }
-    console.log(updatedPrecio);
+};
+  // STATES PARA SELECT DE USERS
+  const [selectedOption, setSelectedOption] = useState(null);
+  const handleSelect = (value) => {
+
+    setUpdatedCard(value.card._id)
+    setUpdatedUser(value._id)
+    setSelectedOption(value);
   };
 
   // Obtener usuarios al cargar el componente
@@ -206,6 +277,8 @@ export default function SubscriptionsDataTable() {
       try {
         const subs = await SubscriptionService.getSubscriptions(); // Llamada al servicio
         setSubscriptionsData(subs); // Guardar datos en el estado
+        const user = await UserService.getUsers(); // Llamada al servicio
+        setUserData(user); // Guardar datos en el estado
       } catch (error) {
         console.error("Error al obtener usuarios:", error);
       } finally {
@@ -229,9 +302,9 @@ export default function SubscriptionsDataTable() {
     
     <TableContainer
       sx={{ md: 600, lg: 1024, xl: 1524,
-        display: { xs: 'none', sm: 'none', md: 'block', lg:'block'}
+        display: { xs: 'none', sm: 'block', md: 'block', lg:'block'}
       }}>
-      <Table  size="small" aria-label="a dense table">
+            <Table sx={{ minWidth: 110 }} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
           <TableCell align="left">
@@ -240,7 +313,7 @@ export default function SubscriptionsDataTable() {
               </Typography>
             </TableCell>
             <TableCell align="left">
-            <Button variant="contained" size="small" onClick={() => addSubscripcion()}>
+              <Button variant="contained" size="small" onClick={() => handleOpenCreate()}>
                 <AddIcon />
               </Button>               
             </TableCell>
@@ -319,6 +392,8 @@ export default function SubscriptionsDataTable() {
             </TableRow>
 
           ))}
+
+          {/* MODAL UPDATE */}
           <Modal
             open={openModalEdit}
             onClose={closeModalEdit}
@@ -329,101 +404,210 @@ export default function SubscriptionsDataTable() {
               {selectedSubscription && (
                   <>
                     <Card sx={{ maxWidth: 345 }}>
-                    <CardHeader
+                      <CardHeader
                         action={
                           <IconButton aria-label="settings" onClick={closeModalEdit}>
                             <ClearIcon />
                           </IconButton>
                         }
-                        title="Editar Subscripcion"
-                        subheader={"para: " + selectedSubscription.user.name + " " + selectedSubscription.user.lastName}
+                        title="Editar Subscripción"
+                        subheader={
+                          "Para: " +
+                          selectedSubscription.user.name +
+                          " " +
+                          selectedSubscription.user.lastName
+                        }
                       />
-                      <CardContent>
-                        <Box sx={{ minWidth: 200 }}>
-                          <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-label">Tipo</InputLabel>
-                            <Select
-                              labelId="demo-simple-select-label"
-                              id="demo-simple-select"
-                              value={updatedTipo}
-                              label="Tipo"
-                              onChange={(e) => {setUpdatedTipo(e.target.value), changePrecio(e.target.value)}}
-                            >
-                              <MenuItem value={'Semanal'}>Semanal</MenuItem>
-                              <MenuItem value={'Mensual'}>Mensual</MenuItem>
-                              <MenuItem value={'Semestral'}>Semestral</MenuItem>
-                              <MenuItem value={'Anual'}>Anual</MenuItem>
-                            </Select>  
-                          </FormControl>
-                        </Box>                        
-                      <Box sx={{ width: 500, maxWidth: "100%" }}>
 
-                        <TextField
-                          fullWidth
-                          disabled
-                          id="lastName"
-                          margin="dense"
-                          label="Precio"
-                          value={updatedPrecio}
-                          onChange={(e) => setUpdatedPrecio(e.target.value)}
-                          variant="filled"
-                          size="small"
-                        />
-                        {/* <div className="card flex justify-content-center">
-                            <Calendar value={updatedFechaInicio} onChange={(e) => setUpdatedFechaInicio(e.target.value)} />
-                        </div>
-                        <Calendar value={updatedFechaInicio} onChange={(e) => setUpdatedFechaInicio(e.target.value)} /> */}
-                        {/* <TextField
+                      <CardContent>
+                        <Box sx={{ width: 500, maxWidth: "100%" }}>
+                          <TextField
                             fullWidth
-                            required
-                            id="standard-required"
+                            disabled
+                            id="user"
                             margin="dense"
-                            label="Inicio"
-                            value={updatedFechaInicio}
-                            placeholder={formatCreatedAt(selectedSubscription.startDate)}
+                            label="Usuario"
+                            value={updatedUser}
+                            onChange={(e) => setUpdatedUser(e.target.value)}
                             variant="filled"
                             size="small"
-                            onChange={(e) => setUpdatedFechaInicio(e.target.value)} 
-                        />  */}
-                        <CalendarField
-                          label="Fecha de Inicio"
-                          selectedDate={selectedSubscription.startDate}
-                          
-                          onChange={(date) => setUpdatedFechaInicio(date)} 
-                        />
-                        <CalendarField
-                          label="Fecha de Fin"
-                          selectedDate={selectedSubscription.startDate}
-                          onChange={(date) => setUpdatedVencimiento(date)} 
+                          />
+                          <TextField
+                            fullWidth
+                            disabled
+                            id="vencimiento"
+                            margin="dense"
+                            label="Fecha de Vencimiento"
+                            value={updatedVencimiento}
+                            onChange={(date) => setUpdatedVencimiento(date)}  //Actualizar fecha de vencimiento
+                            variant="filled"
+                            size="small"
+                          />
+                          <CalendarField
+                            label="Fecha de Inicio"
+                            selectedDate={updatedFechaInicio}
+                            onChange={(date) => setUpdatedFechaInicio(date)} // Actualizar fecha de inicio
+                          />
 
-                        />                  
-                        {/* <TextField
-                          fullWidth
-                          id="email"
-                          margin="dense"
-                          label="Vencimiento"
-                          value={selectedSubscription ? formatCreatedAt(selectedSubscription.endDate) : "N/A"}
-                          placeholder={selectedSubscription ? formatCreatedAt(selectedSubscription.endDate) : "N/A"}
-                          onChange={(e) => setUpdatedVencimiento(e.target.value)}
-                          variant="filled"
-                          size="small"
-                        /> */}
-                    </Box>
+                        </Box>
+                        <Box sx={{ minWidth: 200 }}>
+                          <FormControl fullWidth>
+                            <InputLabel id="tipo-label">Tipo Subscripcion</InputLabel>
+                            <Select
+                              labelId="tipo-label"
+                              id="tipo"
+                              value={updatedTipo}
+                              label="Tipo"
+                              onChange={(e) => {
+                                setUpdatedTipo(e.target.value);
+                                changePrecio(e.target.value);
+                                changeVencimiento(e.target.value);
+                              }}
+                            >
+                              <MenuItem value={"Semanal"}>Semanal</MenuItem>
+                              <MenuItem value={"Mensual"}>Mensual</MenuItem>
+                              <MenuItem value={"Semestral"}>Semestral</MenuItem>
+                              <MenuItem value={"Anual"}>Anual</MenuItem>
+                            </Select>
+                          </FormControl>
+
+                        </Box>                        
                         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                          <strong>Status:</strong> {selectedSubscription.status === "activo"?  "Activo" :"Inactivo" }
-                        </Typography>               
+                          <strong>Status:</strong>{" "}
+                          {selectedSubscription.status === "activo" ? "Activo" : "Inactivo"}
+                        </Typography>
                       </CardContent>
                       <CardActions>
-                        <Button size="small" onClick={handleConfirm}>Confirmar</Button>
-                        <Button size="small" onClick={closeModalEdit}>Cancelar</Button>
+                        <Button size="small" onClick={() => handleConfirmEdit()}>
+                          Confirmar
+                        </Button>
+                        <Button size="small" onClick={closeModalEdit}>
+                          Cancelar
+                        </Button>
                       </CardActions>
                     </Card>
-
-
                   </>
                 )}
             </Box>
           </Modal>
+
+          {/* MODAL CREATE */}
+          <Modal
+            open={openModalCreate}
+            onClose={closeModalCreate}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+                    <Card sx={{ maxWidth: 345 }}>
+                      <CardHeader
+                        action={
+                          <IconButton aria-label="settings" onClick={closeModalCreate}>
+                            <ClearIcon />
+                          </IconButton>
+                        }
+                        title="Agregar Subscripción"
+                      />
+
+                      <CardContent>
+                        <Box sx={{ width: 500, maxWidth: "100%" }}>
+                          <div>
+                            <SearchableSelect
+                              options={userData}
+                              label="Buscar Usuario"
+                              onSelect={handleSelect}
+                            />
+                            {selectedOption && (
+                              <>
+                                <TextField
+                                fullWidth
+                                disabled
+                                id="user"
+                                margin="dense"
+                                label="Usuario"
+                                value={selectedOption.name + " " + selectedOption.lastName }
+                                variant="filled"
+                                size="small"
+                                />
+                                <TextField
+                                fullWidth
+                                disabled
+                                id="card"
+                                margin="dense"
+                                label="Tarjeta"
+                                value={selectedOption.card.lote}
+                                
+                                variant="filled"
+                                size="small"
+                                />                       
+                              </>
+
+                            )}
+                          </div>
+                          <TextField
+                            fullWidth
+                            disabled
+                            id="precio"
+                            margin="dense"
+                            label="Precio"
+                            value={updatedPrecio}
+                            onChange={(e) => setUpdatedPrecio(e.target.value)}
+                            variant="filled"
+                            size="small"
+                          />
+                          <TextField
+                            fullWidth
+                            disabled
+                            id="vencimiento"
+                            margin="dense"
+                            label="Fecha de Vencimiento"
+                            value={updatedVencimiento}
+                            onChange={(date) => setUpdatedVencimiento(date)}  //Actualizar fecha de vencimiento
+                            variant="filled"
+                            size="small"
+                          />
+                          <CalendarField
+                            label="Fecha de Inicio"
+                            selectedDate={updatedFechaInicio}
+                            onChange={(date) => setUpdatedFechaInicio(date)} // Actualizar fecha de inicio
+                          />
+
+                        </Box>
+                        <Box sx={{ minWidth: 200 }}>
+                          <FormControl fullWidth>
+                            <InputLabel id="tipo-label">Tipo Subscripcion</InputLabel>
+                            <Select
+                              labelId="tipo-label"
+                              id="tipo"
+                              value={updatedTipo}
+                              label="Tipo"
+                              onChange={(e) => {
+                                setUpdatedTipo(e.target.value);
+                                changePrecio(e.target.value);
+                                changeVencimiento(e.target.value);
+                              }}
+                            >
+                              <MenuItem value={"Semanal"}>Semanal</MenuItem>
+                              <MenuItem value={"Mensual"}>Mensual</MenuItem>
+                              <MenuItem value={"Semestral"}>Semestral</MenuItem>
+                              <MenuItem value={"Anual"}>Anual</MenuItem>
+                            </Select>
+                          </FormControl>
+
+                        </Box>                        
+                      </CardContent>
+                      <CardActions>
+                        <Button size="small" onClick={() => handleConfirmCreate()}>
+                          Confirmar
+                        </Button>
+                        <Button size="small" onClick={closeModalCreate}>
+                          Cancelar
+                        </Button>
+                      </CardActions>
+                    </Card>
+
+            </Box>
+          </Modal>          
           <Modal open={openAlertModal} onClose={closeAlertModal} aria-labelledby="alert-modal-title" aria-describedby="alert-modal-description">
             <Box sx={{ ...style, textAlign: "center", p: 4 }}>
               <Alert severity={alertSeverity} onClose={closeAlertModal}>

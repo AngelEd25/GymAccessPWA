@@ -32,6 +32,9 @@ const getCards = async () => {
 
 // POST: Crear una tarjeta
 const postCard = async (cardData) => {
+  console.log(cardData);
+  console.log(JSON.stringify(cardData));
+
    try {
      const request = await fetch(Global.url + `/card`, {
        method: "POST",

@@ -115,6 +115,8 @@ const saveToLocalStorage = (key, data) => {
  
  // POST: Crear un subscripcion
  const postSubscription = async (subscriptionsData) => {
+    console.log(subscriptionsData);
+    console.log(JSON.stringify(subscriptionsData));
    try {
      const request = await fetch(Global.url + `/subscriptions`, {
        method: "POST",

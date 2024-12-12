@@ -18,6 +18,60 @@ const ReqPerfil = async (id) => {
   }
 };
 
+
+// Registro de Usuario
+const registerUser = async (userData) => {
+  try {
+    const response = await fetch(Global.url + `/user/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al registrar el usuario");
+    }
+
+    const createdUser = await response.json();
+    return createdUser;
+  } catch (error) {
+    console.error("Error al registrar usuario:", error);
+    // Almacena la solicitud en cola para sincronización offline
+    const pendingRequests = getFromLocalStorage("pendingRequests") || [];
+    pendingRequests.push({ type: "POST", endpoint: "/user/register", data: userData });
+    saveToLocalStorage("pendingRequests", pendingRequests);
+    return null;
+  }
+};
+
+// Login de Usuario
+const loginUser = async (userData) => {
+  try {
+    const response = await fetch(Global.url + `/user/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al iniciar sesión. Verifica tus credenciales.");
+    }
+
+    const { token, user } = await response.json();
+    saveToLocalStorage("token", token); // Guarda el token en Local Storage
+    saveToLocalStorage("user", user); // Guarda los datos del usuario en Local Storage
+
+    return { token, user };
+  } catch (error) {
+    console.error("Error al iniciar sesión:", error);
+    throw error;
+  }
+};
+
 // Obtener un usuario por ID
 const getUserById = async (id) => {
   try {
@@ -211,4 +265,10 @@ export const UserService = {
    switchStatusUser(id, status) {
       return switchStatusUser(id, status);
    },
+   registerUser(userData) {
+    return registerUser(userData);
+  },
+  loginUser(userData) {
+    return loginUser(userData);
+  }
 };
