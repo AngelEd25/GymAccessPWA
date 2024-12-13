@@ -247,7 +247,7 @@ export default function CardsDataTable() {
 
   return (
     <TableContainer sx={{ md: 600, lg: 1254, xl: 1524,
-      display: { xs: 'none', sm: 'block', md: 'block', lg:'block'}
+      display: { xs: 'block', sm: 'block', md: 'block', lg:'block'}
     }} >
       <Table sx={{ minWidth: 110 }} size="small" aria-label="a dense table">
         <TableHead>

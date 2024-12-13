@@ -57,14 +57,14 @@ export default function AdminLayoutMovil(props) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsAuthenticated(true);
-    } else {
-      navigate("/admin/login");
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   if (token) {
+  //     setIsAuthenticated(true);
+  //   } else {
+  //     navigate("/admin/login");
+  //   }
+  // }, [navigate]);
 
 
   
