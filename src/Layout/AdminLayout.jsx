@@ -30,21 +30,11 @@ const Item = styled(Paper)(({ theme }) => ({
   lineHeight: '60px',
 }));
 
-
 const PermanentDrawerLeft = (props) => {
   const [isReadyForInstall, setIsReadyForInstall] = React.useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsAuthenticated(true);
-    } else {
-      navigate("/admin/login");
-    }
-  }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
