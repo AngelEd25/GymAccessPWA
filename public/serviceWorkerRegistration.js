@@ -16,7 +16,7 @@ export function register(config = {}) {
 
       // Registro del Service Worker
       navigator.serviceWorker
-        .register(PROD_SW_URL)
+        .register(PROD_SW_URL, {type:'module'})
         .then((registration) => {
           console.log('Service Worker registrado exitosamente', registration);
 
