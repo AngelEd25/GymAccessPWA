@@ -1,4 +1,4 @@
-import React, { useState }from 'react'
+import React, { useEffect, useState } from "react";
 import './../assets/About.css';
 import { Link, Outlet, useNavigate  } from "react-router-dom";
 import AuthModal from './../components/AuthModal';
@@ -43,82 +43,40 @@ const FirstItem = styled(Paper)(({ theme }) => ({
 }));
 
 export default function UserDashboard() {
-  const navigate = useNavigate();
-  const handleNavigation = (path) => {
-    navigate(path);
-  };
+  const [isReadyForInstall, setIsReadyForInstall] = useState(false);
+  useEffect(() => {
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();
+      window.deferredPrompt = event;
+      setIsReadyForInstall(true);
+    });
+  }, []);
+
+  const downloadApp = async () => {
+    const promptEvent = window.deferredPrompt;
+    if (promptEvent) {
+      promptEvent.prompt();
+      const result = await promptEvent.userChoice;
+      console.log("User choice:", result);
+      window.deferredPrompt = null;
+      setIsReadyForInstall(false);
+    }
+  };  
 
    return (
     <div className="about-container">
-      <Box sx={{ flexGrow: 1, paddingBottom:3}}>
+      <Box sx={{ flexGrow: 1, paddingBottom:2}}>
         <Grid container spacing={1}>
-        <Grid item xs={12} sm={12} sx={{ display: { xs: 'block', sm: 'none', md: 'none'} }}> 
-            <Item>
-            </Item>
-          </Grid>
-        <Grid item xs={12} sm={6} sx={{ display: { xs: 'block', sm: 'block', md: 'none'} }}> 
-            <Item>
-                <Button variant="text" size="small" onClick={() => handleNavigation('/admin-2/usuarios')}>
-                  <AccountCircleIcon />
-                  <Typography
-                    variant="body2"
-                    noWrap
-                    component="div"
-                  >
-                    Usuarios
-                  </Typography>
-                </Button>
-            </Item>
-          </Grid>
-          <Grid item xs={12} sm={6} sx={{ display: { xs: 'block', sm: 'block', md: 'none'} }}>
-            <Item>
-                <Button variant="text" size="small" onClick={() => handleNavigation('/admin-2/subscripciones')}>
-                  <LabelIcon />
-                  <Typography
-                    variant="body2"
-                    noWrap
-                    component="div"
-                    sx={{ display: { xs: 'flex', sm: 'block' } }}
-                  >
-                    Subscripciones
-                  </Typography>
-                </Button>
-            </Item>
-          </Grid>
-          <Grid item xs={12} sm={6} sx={{ display: { xs: 'block', sm: 'block', md: 'none'} }}>
-            <Item>
-            <Button variant="text" size="small" onClick={() => handleNavigation('/admin-2/registros')}>
-                <HistoryIcon />
-                <Typography
-                  variant="body2"
-                  noWrap
-                  component="div"
-                  sx={{ display: { xs: 'flex', sm: 'block' } }}
-                >
-                  Accesos
-                </Typography>
-              </Button>
-            </Item>
-          </Grid>
-          <Grid item xs={12} sm={6} sx={{ display: { xs: 'block', sm: 'block', md: 'none'} }}>
-            <Item>
-            <Button variant="text" size="small" onClick={() => handleNavigation('/admin-2/tarjetas')}>
-              <CallToActionIcon />
-              <Typography
-                  variant="body2"
-                  noWrap
-                  component="div"
-                  sx={{ display: { xs: 'flex', sm: 'block' } }}
-                >
-                  Tarjetas
-                </Typography>
-              </Button>
-            </Item>
-          </Grid>     
+          {isReadyForInstall && (
+            <Grid item xs={12} >
+              <Item elevation={0} sx={{ display: { xs: 'block', sm: 'block', md: 'block'} }}> 
+                  <Button variant="outlined" color="inherit" onClick={downloadApp}>
+                    Install App
+                  </Button>         
+              </Item>           
+            </Grid>
+          )} 
           <Grid item xs={12} >
-            <Item elevation={0} sx={{ display: { xs: 'block', sm: 'none', md: 'none'} }}> 
-              Incline el dispositivo para visualizar las tablas
-            </Item>
             <Item elevation={0}> 
               <DataTable name={name}/>
             </Item>
@@ -130,6 +88,6 @@ export default function UserDashboard() {
           </Grid>
         </Grid>      
       </Box>
-    </div>      
+    </div>     
   );
 }

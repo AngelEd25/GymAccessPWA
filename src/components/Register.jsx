@@ -43,11 +43,11 @@ function Register() {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: {sm: '320px', md: '320px'},
+    width: {sm: '320px', md: '620px'},
     bgcolor: 'background.paper',
     borderRadius: 2,
     boxShadow: 24,
-    p: .15
+    p: 3
   };
 
   // Estados para las alertas
@@ -125,12 +125,13 @@ function Register() {
 
   return (
     <div className="register-container">
-      <div className="logo">Gym Access</div>
       <div className="register-form">
+
+        <Box sx={{ width: {sm: 450, md: 500, lg: 800}, maxWidth: "100%" }}>
         <h2>¡BIENVENIDO! </h2>
         <h2>Ingresa tus datos porfavor</h2>
-        <form id="card-form-register">
-        <Box sx={{ width: {sm: 450, md: 500, lg: 800}, maxWidth: "100%" }}>
+        {/* <form id="card-form-register"> */}
+
                         <TextField
                           fullWidth
                           required
@@ -212,7 +213,7 @@ function Register() {
           <Button variant="contained" size="small" onClick={() => handleConfirmCreate()}>
             Registrarse
           </Button>
-        </form>
+        {/* </form> */}
       </div>
     </div>
 

@@ -42,6 +42,20 @@ export default function About() {
           </Typography>
         </Grid>
 
+        {/* Detailed About Section */}
+        <Grid item xs={12}>
+          <StyledPaper>
+            <Typography variant="h4" gutterBottom>
+              ¿Quiénes somos?
+            </Typography>
+            <Typography variant="body1" align="justify">
+              En GymAccess, somos un equipo dedicado a revolucionar la gestión de gimnasios mediante herramientas tecnológicas modernas.
+              Nuestro objetivo es facilitar el control de membresías, accesos y servicios, adaptándonos a las necesidades únicas de cada gimnasio.
+              Ofrecemos soluciones escalables para pequeños y grandes centros fitness, combinando hardware avanzado con software intuitivo.
+            </Typography>
+          </StyledPaper>
+        </Grid>
+
         {/* Mission, Vision, Values */}
         <Grid item xs={12} md={4}>
           <StyledPaper>
@@ -79,19 +93,7 @@ export default function About() {
           </StyledPaper>
         </Grid>
 
-        {/* Detailed About Section */}
-        <Grid item xs={12}>
-          <StyledPaper>
-            <Typography variant="h4" gutterBottom>
-              ¿Quiénes somos?
-            </Typography>
-            <Typography variant="body1" align="justify">
-              En GymAccess, somos un equipo dedicado a revolucionar la gestión de gimnasios mediante herramientas tecnológicas modernas.
-              Nuestro objetivo es facilitar el control de membresías, accesos y servicios, adaptándonos a las necesidades únicas de cada gimnasio.
-              Ofrecemos soluciones escalables para pequeños y grandes centros fitness, combinando hardware avanzado con software intuitivo.
-            </Typography>
-          </StyledPaper>
-        </Grid>
+
 
         {/* Footer Section */}
         <Grid item xs={12}>

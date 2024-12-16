@@ -24,20 +24,14 @@ import { UserService } from '../services/Usuario.service';
 function Register() {
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const [updatedName, setUpdatedName] = React.useState("");
-  const [updatedStatus, setUpdatedStatus] = React.useState("");
-  const [updatedLastName, setUpdatedLastName] = React.useState("");
-  const [updatedLote, setUpdatedLote] = React.useState("");
   const [updatedEmail, setUpdatedEmail] = React.useState("");
   const [updatedPasword, setUpdatedPasword] = React.useState("");
-  const [updatedAddress, setUpdatedAddress] = React.useState("");
   const [openAlertModal, setOpenAlertModal] = useState(false);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
 
   const navigate = useNavigate();
-
   const style = {
     position: 'absolute',
     top: '50%',
@@ -52,20 +46,13 @@ function Register() {
 
   // Estados para las alertas
   const [alertMessage, setAlertMessage] = React.useState("");
-  const [alertSeverity, setAlertSeverity] = React.useState(""); // success, warning, error  
+  const [alertSeverity, setAlertSeverity] = React.useState(""); // success, warning, error
   const closeAlertModal = () => {
     // setOpenModalEdit(false); // Abre el modal
     setOpenAlertModal(false); // Cierra el modal Alert
   };
   const handleMouseUpPassword = (event) => {
     event.preventDefault();
-  };
-
-  const closeModalCreate = () => {
-    setOpenModalCreate(false); // Cierra el modal
-    setUpdatedEmail(null);
-    setUpdatedPasword(null);
-    setSelectedUser(null); // Limpia el card seleccionado
   };
 
   const handleConfirmCreate = async () => {
@@ -79,39 +66,41 @@ function Register() {
       setOpenAlertModal(true);
       return;
     }
-    try{
-        const responseUpdateUser = await UserService.loginUser({
-            email: updatedEmail,
-            password: updatedPasword
-          });
+    else{
+      try{
+          const responseUpdateUser = await UserService.loginUser({
+              email: updatedEmail,
+              password: updatedPasword
+            });
+            console.log(responseUpdateUser);
+            if(responseUpdateUser){
+                // Actualiza la lista de usuarios (usersData)
+                setAlertMessage("Has Ingresado.");
+                setAlertSeverity("success");
+                setOpenAlertModal(true);
+                
+                // localStorage.setItem("token", );
+              // Redirigir al login tras un breve tiempo
+              setTimeout(() => {
+                setOpenAlertModal(false);
+                navigate("/admin/usuarios");
+              }, 5000); // 2 segundos para mostrar el modal antes de redirigir
+            }
+          else{
+            // Llamada al backend para actualizar el usuario
+            setAlertMessage("Algo salio mal .");
+            setAlertSeverity("success");
+            setOpenAlertModal(true);
 
-          if(responseUpdateUser){
-              // Actualiza la lista de usuarios (usersData)
-              setAlertMessage("Usuario creado exitosamente.");
-              setAlertSeverity("success");
-              setOpenAlertModal(true);
-
-            // Redirigir al login tras un breve tiempo
-            setTimeout(() => {
-              setOpenAlertModal(false);
-              navigate("/admin-2/usuarios");
-            }, 5000); // 2 segundos para mostrar el modal antes de redirigir
           }
-        else{
-          // Llamada al backend para actualizar el usuario
-          setAlertMessage("Algo salio mal al crear usuario.");
-          setAlertSeverity("success");
-          setOpenAlertModal(true);
 
-        }
-
-    }catch (error) {
-      console.error("Error al crear usuario:", error);
-      alert("Error al crear Usuario.");
-      setAlertMessage("Error al crear usuario");
-      setAlertSeverity("warning");
-      setOpenAlertModal(true);
+      }catch (error) {
+        setAlertMessage("Error al ingresar, intentelo nuevamente");
+        setAlertSeverity("warning");
+        setOpenAlertModal(true);
+      }
     }
+
 };
 
   return (
@@ -121,7 +110,7 @@ function Register() {
         <h2>¡BIENVENIDO! </h2>
         <h2>Ingresa tus datos porfavor</h2>
         <form id="card-form-login">
-        <Box sx={{ width: {sm: 450, md: 500, lg: 800}, maxWidth: "100%" }}>                 
+        <Box sx={{ width: {sm: 450, md: 500, lg: 800}, maxWidth: "100%" }}>
                         <TextField
                           fullWidth
                           id="email"

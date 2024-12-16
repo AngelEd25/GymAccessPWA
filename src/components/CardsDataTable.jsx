@@ -8,6 +8,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { UserService } from '../services/Usuario.service';
 import { CardService } from '../services/Cards.service';
+import { RegistroService } from '../services/Registros.service';
+
 
 import MenuOptions from './MenuOptions';
 import Box from '@mui/material/Box';
@@ -140,6 +142,7 @@ export default function CardsDataTable() {
     }
     try {
       // Llamada al backend para actualizar la tarjeta
+      convertCardUID(updatedLote);
       const response = await CardService.putCard(selectedCard._id, {
         lote: updatedLote,
       });
@@ -164,6 +167,8 @@ export default function CardsDataTable() {
     }
   };
 
+
+
   // Función para manejar la confirmación del formulario
   const handleConfirmCreate = async () => {
     console.log(updatedNewdCard);
@@ -178,23 +183,28 @@ export default function CardsDataTable() {
 
     try {
       // Llamada al backend para actualizar la tarjeta
-      const response = await CardService.postCard({
+      const responsePostCard = await CardService.postCard({
         lote: updatedNewdCard,
         userId: updatedUser
       });
-      console.log(response)
-      if (response) {
+      console.log(responsePostCard)
+      if (responsePostCard) {
         const cards = await CardService.getCards(); // Llamada al servicio
         setCardsData(cards); // Guardar datos en el estado
         setAlertMessage("Tarjeta creada exitosamente.");
         setAlertSeverity("success");
         setOpenAlertModal(true);
-        closeModalEdit(); // Cierra el modal
-
+        closeModalCreate(); // Cierra el modal
+        setTimeout(()  =>  {
+          registerAccess()
+        }, 15000); // 15 segundos para mostrar el modal antes de redirigir
       }
-
-
-      
+      if(responsePostCard == null){
+        setAlertMessage("Tarjeta pendiente por crear.");
+        setAlertSeverity("success");
+        setOpenAlertModal(true);
+        closeModalCreate(); // Cierra el modal
+      }
     } catch (error) {
       console.error("Error al crear la tarjeta:", error);
       setAlertMessage("Algo salio mal al crear tarjeta.");
@@ -202,6 +212,15 @@ export default function CardsDataTable() {
       setOpenAlertModal(true);
     }
   };
+
+  const registerAccess = async () => {
+    const respRegisterAccess = await RegistroService.postRegistro({
+      lote: updatedNewdCard,
+      userId: updatedUser
+    });   
+  }
+
+
 
   // STATES PARA SELECT DE USERS
   const [selectedOption, setSelectedOption] = useState(null);
@@ -357,7 +376,7 @@ export default function CardsDataTable() {
                             variant="filled"
                             size="small"
                             onChange={(e) => setUpdatedLote(e.target.value)} 
-                          />            
+                          />                                 
                         </Box>                        
                       </CardContent>
                         <CardActions>

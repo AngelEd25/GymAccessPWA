@@ -41,6 +41,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 
+
 import { format, subHours } from 'date-fns';
 const style = {
   position: 'absolute',
@@ -54,7 +55,7 @@ const style = {
   p: 4,
 };
 
-export default function RegistrosDataTable() {
+export default function AddRegistro() {
 
   const [open, setOpen] = useState(false);
   const [registers, setUsers] = useState([]); // Estado para los usuarios
@@ -80,11 +81,15 @@ export default function RegistrosDataTable() {
   };
 
   const handleDeleteAccess = async (register) => {
-    RegistroService.deleteRegistro(register._id);
-    const newRegistroData = await RegistroService.getRegistros(); // Llamada al servicio
-    setRegistrosData(newRegistroData); // Guardar datos en el estado
-    setSelectedUser(null); // Limpia el usuario seleccionado
+   const idUsuario = register.user._id;
+   const cardUID = register.card.lote;
+   console.log(idUsuario);
+   console.log(cardUID);
 
+    const respRegisterAccess = await RegistroService.postRegistro({
+      userId: idUsuario,
+      lote: cardUID
+    });   
   };
 
   // Función para formatear la fecha y restar 6 horas

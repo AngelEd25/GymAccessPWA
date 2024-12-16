@@ -62,6 +62,7 @@ const loginUser = async (userData) => {
     }
 
     const { token, user } = await response.json();
+    console.log(response);
     saveToLocalStorage("token", token); // Guarda el token en Local Storage
     saveToLocalStorage("user", user); // Guarda los datos del usuario en Local Storage
 
@@ -111,17 +112,27 @@ const putUser = async (id, userData) => {
 // Eliminar un usuario por ID
 const deleteUser = async (id) => {
   try {
-    const request = await fetch(Global.url + `/user/${id}`, {
+    const response = await fetch(Global.url + `/user/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
     });
-    const result = await request.json();
+
+    if (!response.ok) {
+      throw new Error("Error al eliminar el usuario");
+    }
+
+    const result = await response.json();
     return result;
   } catch (error) {
-    console.error("Error al eliminar el usuario:", error);
-    throw error;
+    console.error("Error al eliminar usuario:", error);
+
+    // Guardar solicitud en cola para sincronización
+    const pendingRequests = getFromLocalStorage("pendingRequests") || [];
+    pendingRequests.push({ type: "DELETE", endpoint: `${Global.url}/user/${id}` });
+    saveToLocalStorage("pendingRequests", pendingRequests);
+    return null;
   }
 };
 
@@ -200,7 +211,7 @@ const saveToLocalStorage = (key, data) => {
      console.error("Error al registrar usuario. Guardando en Local Storage:", error);
      // Guardar solicitud en cola para sincronización
      const pendingRequests = getFromLocalStorage("pendingRequests") || [];
-     pendingRequests.push({ type: "POST", endpoint: "/user", data: userData });
+     pendingRequests.push({ type: "POST", endpoint: Global.url + `/user`, data: userData });
      saveToLocalStorage("pendingRequests", pendingRequests);
      return null;
    }
@@ -231,6 +242,8 @@ const saveToLocalStorage = (key, data) => {
    // Actualizar solicitudes pendientes
    saveToLocalStorage("pendingRequests", remainingRequests);
  };
+ 
+
  
 
 

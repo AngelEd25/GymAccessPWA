@@ -109,7 +109,7 @@ const saveToLocalStorage = (key, data) => {
      return subscriptionssData;
    } catch (error) {
      console.error("Error al obtener las subscripciones Usando Local Storage:", error);
-     return getFromLocalStorage("subscriptionss") || [];
+     return getFromLocalStorage("subscriptions") || [];
    }
  };
  

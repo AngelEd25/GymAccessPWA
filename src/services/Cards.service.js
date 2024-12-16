@@ -32,7 +32,6 @@ const getCards = async () => {
 
 // POST: Crear una tarjeta
 const postCard = async (cardData) => {
-  console.log(cardData);
   console.log(JSON.stringify(cardData));
 
    try {
@@ -45,14 +44,19 @@ const postCard = async (cardData) => {
      });
      const createdCard = await request.json();
      return createdCard;
+    
+
    } catch (error) {
      console.error("Error al registrar tarjeta. Guardando en Local Storage:", error);
      // Guardar solicitud en cola para sincronización
      const pendingRequests = getFromLocalStorage("pendingRequests") || [];
-     pendingRequests.push({ type: "POST", endpoint: "/cards", data: cardData });
+     pendingRequests.push({ type: "POST", endpoint: Global.url + `/card`, data: cardData });
      saveToLocalStorage("pendingRequests", pendingRequests);
      return null;
    }
+
+   
+
 };
 
 // GET: Obtener una tarjeta por ID

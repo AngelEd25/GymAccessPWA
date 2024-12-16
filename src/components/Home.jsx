@@ -7,6 +7,8 @@ import Typography from '@mui/material/Typography';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import PaymentIcon from '@mui/icons-material/Payment';
 import SecurityIcon from '@mui/icons-material/Security';
+import Card from '@mui/material/Card';
+import CardMedia from '@mui/material/CardMedia';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: '#1A2027',
@@ -19,6 +21,14 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     transform: 'translateY(-5px)',
   },
   borderRadius: theme.shape.borderRadius,
+}));
+
+const Item = styled(Paper)(({ theme }) => ({
+  ...theme.typography.body2,
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+  height: 60,
+  lineHeight: '60px',
 }));
 
 export default function FullWidthGrid() {
@@ -83,7 +93,6 @@ export default function FullWidthGrid() {
             </Typography>
           </StyledPaper>
         </Grid>
-
         {/* Footer */}
         <Grid item xs={12}>
           <Paper

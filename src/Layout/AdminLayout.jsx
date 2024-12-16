@@ -17,20 +17,34 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import Logout from '@mui/icons-material/Logout';
+import Card from '@mui/material/Card';
+import Paper from '@mui/material/Paper';
+import CardMedia from '@mui/material/CardMedia';
+
+
+const Item = styled(Paper)(({ theme }) => ({
+  ...theme.typography.body2,
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+  height: 60,
+  lineHeight: '60px',
+}));
+
 
 const PermanentDrawerLeft = (props) => {
+  const [isReadyForInstall, setIsReadyForInstall] = React.useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   if (token) {
-  //     setIsAuthenticated(true);
-  //   } else {
-  //     navigate("/admin/login");
-  //   }
-  // }, [navigate]);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsAuthenticated(true);
+    } else {
+      navigate("/admin/login");
+    }
+  }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -53,32 +67,45 @@ const PermanentDrawerLeft = (props) => {
         <Toolbar sx={{
           display: { xs: 'flex', sm: 'flex' },
           alignItems: 'center',
-          gap: { xs: 2, sm: 10, md: 16, lg: 35 }
+          gap: { xs: 2, sm: 10, md: 16, lg: 30 }
         }}>
-
+        <Box sx={{  display: { xs: 'flex', md: 'flex' } }}>
+            <Card sx={{display: 'flex', borderRadius: 0, boxShadow: 0}}>
+                
+                <Item key="card">
+                    <CardMedia
+                        component="img"
+                        sx={{ width: 65, height: 65}}
+                        src="https://res.cloudinary.com/dcdb72215/image/upload/v1734182955/image2_azsdut.png"
+                        alt="Gyma-icon"
+                    />                 
+                </Item>
+            </Card>
+            
+        </Box>          
+        <Box sx={{  display: { xs: 'flex', md: 'flex' } }}>
           <Typography
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: 'flex', sm: 'block' } }}
+            sx={{ display: { xs: 'block', sm: 'block' } }}
           >
             GymAccess
           </Typography>
-
-          {isAuthenticated && (
+        </Box>
             <Box sx={{ display: { xs: 'flex', md: 'flex' } }}>
               <Button color="inherit" onClick={() => navigate('/gyma/home')}>Home</Button>
               <Button color="inherit" onClick={() => navigate('/gyma/about')}>¿Quiénes Somos?</Button>
+                {isReadyForInstall && (
+                <IconButton size="large" aria-label="show new subscription mails" color="inherit" onClick={downloadApp}>
+                  <button > Install App </button>
+                </IconButton>
+              )}              
+            </Box>
 
-              <IconButton
-                size="large"
-                aria-label="show new notifications"
-                color="inherit"
-              >
-                <Badge badgeContent={4} color="error">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
+          {isAuthenticated && (
+            <Box sx={{ display: { xs: 'flex', md: 'flex' } }}>
+
               <Tooltip title="Account settings">
                 <IconButton
                   onClick={handleClick}
@@ -104,12 +131,14 @@ const PermanentDrawerLeft = (props) => {
                   <Logout fontSize="small" /> Logout
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
-                  <Button color="inherit" onClick={() => navigate('/admin-2/usuarios')}>Ir a Admin</Button>
+                  <Button color="inherit" onClick={() => navigate('/admin/usuarios')}>Ir a Admin</Button>
 
                 </MenuItem>
               </Menu>
             </Box>
-          )}
+            )}
+
+          
         </Toolbar>
       </AppBar>
 

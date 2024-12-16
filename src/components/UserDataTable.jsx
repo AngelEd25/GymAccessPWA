@@ -98,6 +98,11 @@ export default function UserDataTable() {
 
   const closeModalEdit = () => {
     setOpenModalEdit(false); // Cierra el modal
+    setSelectedUser(null); // Limpia el card seleccionado
+  };
+
+  const handleOpenCreate = (user) => {
+
     setUpdatedName(null);
     setUpdatedStatus(null);
     setUpdatedLastName(null);
@@ -106,9 +111,6 @@ export default function UserDataTable() {
     setUpdatedPasword(null);
     setUpdatedAddress(null);
     setSelectedUser(null); // Limpia el card seleccionado
-  };
-
-  const handleOpenCreate = (user) => {
     setSelectedUser(user); // Almacena el usuario seleccionado
     setOpenModalCreate(true); // Abre el modal
   };

@@ -164,11 +164,11 @@ export default function AdminLayoutMovil(props) {
         <Box sx={{  display: { xs: 'flex', md: 'flex' } }}>
             <Card sx={{display: 'flex', borderRadius: 0, boxShadow: 0}}>
                 
-                <Item key="card" elevation="0">
+                <Item key="card">
                     <CardMedia
                         component="img"
                         sx={{ width: 65, height: 65}}
-                        image="https://cdn.gencraft.com/prod/user/e289b914-4708-4e31-91f4-34a7af492ae8/edfc8973-029c-4066-90d2-a5c964177435/image/image1_0.jpg?Expires=1734028413&Signature=UDEGvComOlLpB-djzMu17YK1A02QgsBI4M0~DYFOkWbV~U3pcZ4H1VAI2H7dyreTZrMUepu-YYzG0JEpfMmlmUaZ-zxOcRYeLVPYAzl0TDShpnoZzACIPLISwe-wf4LYaan79qka8nJwTJitRoD1NjapSH3VwAOZRbwmd-pccAkKaUpc-1nNm8Gk8HtPHHgBl9DFyWXbO8tOt6qKwJ~NT6Hiw9DwF~ShOsuDUUwL1l3MLeo0CB-5kiYiUT7mTcF9iZpgonzRJNv-4wZUpduF3FshNtqdvVB4xFGHWV-jRnIHaK10OvJoCcYMeJS1uTSKGwha1lEYwuIawVSOtIWYNg__&Key-Pair-Id=K3RDDB1TZ8BHT8"
+                        url="../src/assets/images/image2.jpg"
                         alt="Gyma-icon"
                     />                 
                 </Item>
@@ -184,11 +184,11 @@ export default function AdminLayoutMovil(props) {
           </Typography>
 
           <Box sx={{ display: { xs: 'flex', md: 'flex' } }}>
-            <IconButton size="large" aria-label="show new subscription mails" color="inherit" onClick={() => clearNotifications("subscriptions")}>
             {isReadyForInstall && (
-            <button onClick={downloadApp}> Install App </button>
+              <IconButton size="large" aria-label="show new subscription mails" color="inherit" >
+                <button > Install App </button>
+              </IconButton>
             )}
-            </IconButton>
             <Button color="inherit" onClick={() => navigate('/gyma/home')}>Home</Button>
 
             <IconButton size="large" aria-label="show new notifications" color="inherit" onClick={() => clearNotifications("general")}>
