@@ -1,94 +1,92 @@
 /* eslint-disable no-restricted-globals */
-import { precacheAndRoute } from 'workbox-precaching';
-import { registerRoute, setDefaultHandler } from 'workbox-routing';
-import {
-  NetworkFirst,
-  CacheFirst,
-  StaleWhileRevalidate
-} from 'workbox-strategies';
-import { ExpirationPlugin } from 'workbox-expiration';
-import { CacheableResponsePlugin } from 'workbox-cacheable-response';
-import { clientsClaim, skipWaiting } from 'workbox-core';
+
+// Importar scripts de Workbox desde la CDN
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-core.min.js');
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-precaching.min.js');
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-routing.min.js');
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-strategies.min.js');
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-expiration.min.js');
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-cacheable-response.min.js');
 
 // Configuración Inicial de Versiones de Caché
 const CACHE_VERSIONS = {
   static: 'static-v1',
   dynamic: 'dynamic-v1',
-  images: 'images-v1'
+  images: 'images-v1',
 };
 
 // Precarga de recursos definidos en el manifiesto de Workbox
-precacheAndRoute(self.__WB_MANIFEST);
+workbox.precaching.precacheAndRoute(self.__WB_MANIFEST);
 
 // Claim y Skip Waiting para control inmediato
-clientsClaim();
-skipWaiting();
+workbox.core.clientsClaim();
+workbox.core.skipWaiting();
 
 // Estrategias de Caché
 
 // Estrategia para páginas (Network First)
-const pageStrategy = new NetworkFirst({
+const pageStrategy = new workbox.strategies.NetworkFirst({
   cacheName: CACHE_VERSIONS.static,
   plugins: [
-    new CacheableResponsePlugin({
-      statuses: [0, 200]
+    new workbox.cacheableResponse.CacheableResponsePlugin({
+      statuses: [0, 200],
     }),
-    new ExpirationPlugin({
+    new workbox.expiration.ExpirationPlugin({
       maxEntries: 60,
-      maxAgeSeconds: 30 * 24 * 60 * 60 // 30 días
-    })
-  ]
+      maxAgeSeconds: 30 * 24 * 60 * 60, // 30 días
+    }),
+  ],
 });
 
 // Estrategia para imágenes (Cache First)
-const imageStrategy = new CacheFirst({
+const imageStrategy = new workbox.strategies.CacheFirst({
   cacheName: CACHE_VERSIONS.images,
   plugins: [
-    new CacheableResponsePlugin({
-      statuses: [0, 200]
+    new workbox.cacheableResponse.CacheableResponsePlugin({
+      statuses: [0, 200],
     }),
-    new ExpirationPlugin({
+    new workbox.expiration.ExpirationPlugin({
       maxEntries: 100,
-      maxAgeSeconds: 30 * 24 * 60 * 60 // 30 días
-    })
-  ]
+      maxAgeSeconds: 30 * 24 * 60 * 60, // 30 días
+    }),
+  ],
 });
 
 // Estrategia para APIs (Stale While Revalidate)
-const apiStrategy = new StaleWhileRevalidate({
+const apiStrategy = new workbox.strategies.StaleWhileRevalidate({
   cacheName: CACHE_VERSIONS.dynamic,
   plugins: [
-    new CacheableResponsePlugin({
-      statuses: [0, 200]
+    new workbox.cacheableResponse.CacheableResponsePlugin({
+      statuses: [0, 200],
     }),
-    new ExpirationPlugin({
+    new workbox.expiration.ExpirationPlugin({
       maxEntries: 50,
-      maxAgeSeconds: 24 * 60 * 60 // 1 día
-    })
-  ]
+      maxAgeSeconds: 24 * 60 * 60, // 1 día
+    }),
+  ],
 });
 
 // Registro de Rutas
 // Documentos HTML
-registerRoute(
+workbox.routing.registerRoute(
   ({ request }) => request.destination === 'document',
   pageStrategy
 );
 
 // Imágenes
-registerRoute(
+workbox.routing.registerRoute(
   ({ request }) => request.destination === 'image',
   imageStrategy
 );
 
 // Solicitudes de API
-registerRoute(
+workbox.routing.registerRoute(
   ({ url }) => url.pathname.startsWith('/api/'),
   apiStrategy
 );
 
 // Estrategia por defecto (Network First)
-setDefaultHandler(new NetworkFirst());
+workbox.routing.setDefaultHandler(new workbox.strategies.NetworkFirst());
 
 // Eventos del Ciclo de Vida
 
