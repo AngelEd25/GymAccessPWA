@@ -9,11 +9,6 @@
   "display": "standalone",
   "icons": [
    {
-     "src": "GymAccess249.png",
-     "type": "image/png",
-     "sizes": "249x249"
-   },
-   {
      "sizes": "36x36",
      "type": "image/png",
      "src": "./../public/Android/icon36-gyma.png"
