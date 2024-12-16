@@ -12,7 +12,7 @@ export function register(config = {}) {
 
   window.addEventListener('load', () => {
     try {
-      const PROD_SW_URL = import.meta.env.VITE_SERVICE_WORKER_URL || '/services-worker.js';
+      const PROD_SW_URL = import.meta.env.VITE_SERVICE_WORKER_URL || '/service-worker.js';
 
       // Registro del Service Worker
       navigator.serviceWorker
