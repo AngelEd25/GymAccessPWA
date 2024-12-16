@@ -199,12 +199,11 @@ export default function AdminLayoutResponsive(props) {
       <Divider />
       <List>
         <ListItem disablePadding>
-          <ListItemButton onClick={handleLogout}>
-            <ListItemIcon>
-              <Logout />
-            </ListItemIcon>
-            <ListItemText primary="Cerrar Sesión" />
-          </ListItemButton>
+          {isReadyForInstall && (
+                <IconButton size="large" aria-label="show new subscription mails" color="inherit" onClick={downloadApp}>
+                  <button > Install App </button>
+                </IconButton>
+          )}       
         </ListItem>
       </List>
       <Divider />
