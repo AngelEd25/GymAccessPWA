@@ -8,7 +8,7 @@ importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-expiration.min.js');
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-cacheable-response.min.js');
 
-// Configuración Inicial de Versiones de Caché
+// Configuración inicial de las versiones de caché
 const CACHE_VERSIONS = {
   static: 'static-v1',
   dynamic: 'dynamic-v1',
@@ -16,21 +16,22 @@ const CACHE_VERSIONS = {
 };
 
 // Precarga de recursos definidos en el manifiesto de Workbox
-workbox.precaching.precacheAndRoute(self.__WB_MANIFEST);
+if (workbox) {
+  console.log('[SW] Workbox cargado exitosamente.');
+  workbox.precaching.precacheAndRoute(self.__WB_MANIFEST);
+} else {
+  console.error('[SW] Workbox no se pudo cargar.');
+}
 
 // Claim y Skip Waiting para control inmediato
 workbox.core.clientsClaim();
 workbox.core.skipWaiting();
 
-// Estrategias de Caché
-
-// Estrategia para páginas (Network First)
+// Estrategias de caché
 const pageStrategy = new workbox.strategies.NetworkFirst({
   cacheName: CACHE_VERSIONS.static,
   plugins: [
-    new workbox.cacheableResponse.CacheableResponsePlugin({
-      statuses: [0, 200],
-    }),
+    new workbox.cacheableResponse.CacheableResponsePlugin({ statuses: [0, 200] }),
     new workbox.expiration.ExpirationPlugin({
       maxEntries: 60,
       maxAgeSeconds: 30 * 24 * 60 * 60, // 30 días
@@ -38,13 +39,10 @@ const pageStrategy = new workbox.strategies.NetworkFirst({
   ],
 });
 
-// Estrategia para imágenes (Cache First)
 const imageStrategy = new workbox.strategies.CacheFirst({
   cacheName: CACHE_VERSIONS.images,
   plugins: [
-    new workbox.cacheableResponse.CacheableResponsePlugin({
-      statuses: [0, 200],
-    }),
+    new workbox.cacheableResponse.CacheableResponsePlugin({ statuses: [0, 200] }),
     new workbox.expiration.ExpirationPlugin({
       maxEntries: 100,
       maxAgeSeconds: 30 * 24 * 60 * 60, // 30 días
@@ -52,13 +50,10 @@ const imageStrategy = new workbox.strategies.CacheFirst({
   ],
 });
 
-// Estrategia para APIs (Stale While Revalidate)
 const apiStrategy = new workbox.strategies.StaleWhileRevalidate({
   cacheName: CACHE_VERSIONS.dynamic,
   plugins: [
-    new workbox.cacheableResponse.CacheableResponsePlugin({
-      statuses: [0, 200],
-    }),
+    new workbox.cacheableResponse.CacheableResponsePlugin({ statuses: [0, 200] }),
     new workbox.expiration.ExpirationPlugin({
       maxEntries: 50,
       maxAgeSeconds: 24 * 60 * 60, // 1 día
@@ -66,66 +61,43 @@ const apiStrategy = new workbox.strategies.StaleWhileRevalidate({
   ],
 });
 
-// Registro de Rutas
-// Documentos HTML
-workbox.routing.registerRoute(
-  ({ request }) => request.destination === 'document',
-  pageStrategy
-);
+// Registro de rutas
+workbox.routing.registerRoute(({ request }) => request.destination === 'document', pageStrategy);
+workbox.routing.registerRoute(({ request }) => request.destination === 'image', imageStrategy);
+workbox.routing.registerRoute(({ url }) => url.pathname.startsWith('/api/'), apiStrategy);
 
-// Imágenes
-workbox.routing.registerRoute(
-  ({ request }) => request.destination === 'image',
-  imageStrategy
-);
+// Manejo de modo offline
+workbox.routing.setCatchHandler(async ({ event }) => {
+  if (event.request.destination === 'document') {
+    return await caches.match('/offline.html');
+  }
+  return Response.error();
+});
 
-// Solicitudes de API
-workbox.routing.registerRoute(
-  ({ url }) => url.pathname.startsWith('/api/'),
-  apiStrategy
-);
-
-// Estrategia por defecto (Network First)
-workbox.routing.setDefaultHandler(new workbox.strategies.NetworkFirst());
-
-// Eventos del Ciclo de Vida
-
-// Evento de Instalación
+// Evento de instalación
 self.addEventListener('install', (event) => {
-  console.log('Service Worker: Instalado');
+  console.log('[SW] Instalando Service Worker...');
   event.waitUntil(self.skipWaiting());
 });
 
-// Evento de Activación (Limpieza de cachés antiguos)
+// Evento de activación: limpieza de cachés antiguas
 self.addEventListener('activate', (event) => {
-  console.log('Service Worker: Activado');
+  console.log('[SW] Activando Service Worker...');
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
+    caches.keys().then((cacheNames) =>
+      Promise.all(
         cacheNames.map((cacheName) => {
           if (!Object.values(CACHE_VERSIONS).includes(cacheName)) {
+            console.log('[SW] Eliminando caché antigua:', cacheName);
             return caches.delete(cacheName);
           }
         })
-      );
-    })
+      )
+    )
   );
 });
 
-// Manejo de modo Offline
-self.addEventListener('fetch', (event) => {
-  if (!navigator.onLine) {
-    const request = event.request;
-    if (request.destination === 'document') {
-      event.respondWith(
-        caches.match('/offline.html') || 
-        caches.match('/index.html')
-      );
-    }
-  }
-});
-
-// Registro de Errores
+// Registro de errores
 self.addEventListener('error', (event) => {
-  console.error('Service Worker Error:', event);
+  console.error('[SW] Error detectado:', event);
 });

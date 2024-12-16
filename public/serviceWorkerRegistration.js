@@ -6,7 +6,7 @@ export function register(config = {}) {
   }
 
   // Solo registrar en producción
-  if (import.meta.env.PROD === false) {
+  if (import.meta.env.VITE_PROD === false) {
     return;
   }
 
