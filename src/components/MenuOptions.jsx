@@ -89,7 +89,7 @@ export default function MenuOptions(props) {
         open={open}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose, ock} disableRipple>
+        <MenuItem onClick={() => {handleClose(); ock();}} disableRipple>
           <EditIcon />
             Edit
         </MenuItem>
