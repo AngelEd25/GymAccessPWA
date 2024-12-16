@@ -105,7 +105,7 @@ const saveToLocalStorage = (key, data) => {
      });
      const subscriptionssData = await request.json();
      // Guardar datos en Local Storage
-     saveToLocalStorage("subscriptionss", subscriptionssData);
+     saveToLocalStorage("subscriptions", subscriptionssData);
      return subscriptionssData;
    } catch (error) {
      console.error("Error al obtener las subscripciones Usando Local Storage:", error);
